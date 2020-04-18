@@ -1,11 +1,12 @@
-# busmapjs
-これは、GTFS等からバスマップを作るJavaScriptです。
-使用例は<a href="https://toyotamakenkyusyo.github.io/busmapjs/busmapjs.xhtml">https://toyotamakenkyusyo.github.io/busmapjs/busmapjs.xhtml</a>にあります。
-リアルタイム情報を含む使用例は<a href="https://ss1.xrea.com/toyotama.g1.xrea.com/bus/busmapjs/busmapjs.xhtml">https://ss1.xrea.com/toyotama.g1.xrea.com/bus/busmapjs/busmapjs.xhtml</a>にあります。
+# busmapmjs
+これは、GTFS等からバスマップを作るJavaScriptです。<a href="https://github.com/toyotamakenkyusyo/busmapjs">https://github.com/toyotamakenkyusyo/busmapjs</a>をmodule分割して、リニューアルをしているところです。  
+moduleのjsの拡張子をmjsにすると、一部のサーバーでMIMEタイプが正しく認識されないため、jsにしています。  
+XHTML5ではGoogle Chromeでmoduleが使えないため、HTML5でも作っています。
+使用例は<a href="https://toyotamakenkyusyo.github.io/busmapmjs/busmapmjs.html">https://toyotamakenkyusyo.github.io/busmapmjs/busmapmjs.html</a>にあります。
 使い方の説明などは、今後書く予定です。
 ## ファイルの説明
-- <a href="busmap_module.js">busmap_module.js</a>  
-- <a href="busmapjs_module.xhtml">busmapjs_module.xhtml</a>  
+- <a href="busmapm.js">busmapm.js</a>  
+- <a href="busmapmjs.xhtml">busmapmjs.xhtml</a>  
 module分割を進めたもの。簡単な経路検索機能をつけた。  
 - <a href="js/f_binary_to_json.js">js/f_binary_to_json.js</a>  
 - <a href="js/f_csv_to_json.js">js/f_csv_to_json.js</a>  
