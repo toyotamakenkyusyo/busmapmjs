@@ -1,47 +1,44 @@
 # busmapmjs
 これは、GTFS等からバスマップを作るJavaScriptです。<a href="https://github.com/toyotamakenkyusyo/busmapjs">https://github.com/toyotamakenkyusyo/busmapjs</a>をmodule分割して、リニューアルをしているところです。  
-moduleのjsの拡張子をmjsにすると、一部のサーバーでMIMEタイプが正しく認識されないため、jsにしています。  
 XHTML5ではGoogle Chromeでmoduleが使えないため、HTML5でも作っています。
 使用例は<a href="https://toyotamakenkyusyo.github.io/busmapmjs/busmapmjs.html">https://toyotamakenkyusyo.github.io/busmapmjs/busmapmjs.html</a>にあります。
 使い方の説明などは、今後書く予定です。
 ## ファイルの説明
-- <a href="busmapm.js">busmapm.js</a>  
 - <a href="busmapmjs.xhtml">busmapmjs.xhtml</a>  
-module分割を進めたもの。簡単な経路検索機能をつけた。  
-- <a href="js/f_binary_to_json.js">js/f_binary_to_json.js</a>  
-- <a href="js/f_csv_to_json.js">js/f_csv_to_json.js</a>  
+- <a href="mjs/f_binary_to_mjson.mjs">mjs/f_binary_to_mjson.mjs</a>  
+- <a href="mjs/f_csv_to_mjson.mjs">mjs/f_csv_to_mjson.mjs</a>  
 GTFSの各CSVファイル（stops.txt等）をJavaScriptのobjectに変換する
-- <a href="js/f_from_api.js">js/f_from_api.js</a>  
+- <a href="mjs/f_from_api.mjs">mjs/f_from_api.mjs</a>  
 TraRepoのapiを読み込む
-- <a href="js/f_from_geojson.js">js/f_from_geojson.js</a>  
-独自形式GeoJSONを読み込む
-- <a href="js/f_from_topojson.js">js/f_from_topojson.js</a>  
-独自形式TopoJSONを読み込む、廃止予定
-- <a href="js/f_html.js">js/f_html.js</a>  
+- <a href="mjs/f_from_geomjson.mjs">mjs/f_from_geomjson.mjs</a>  
+独自形式GeomjsONを読み込む
+- <a href="mjs/f_from_topomjson.mjs">mjs/f_from_topomjson.mjs</a>  
+独自形式TopomjsONを読み込む、廃止予定
+- <a href="mjs/f_html.mjs">mjs/f_html.mjs</a>  
 ウェブページで表示するときの、Leafletや表示の設定を行うHTMLを書き出す
-- <a href="js/f_input_settings.js">js/f_input_settings.js</a>
+- <a href="mjs/f_input_settings.mjs">mjs/f_input_settings.mjs</a>
 初期設定を読み込む
-- <a href="js/f_lonlat_xy.js">js/f_lonlat_xy.js</a>  
+- <a href="mjs/f_lonlat_xy.mjs">mjs/f_lonlat_xy.mjs</a>  
 緯度経度をxyと変換する
-- <a href="js/f_make_bmd.js">js/f_make_bmd.js</a>  
+- <a href="mjs/f_make_bmd.mjs">mjs/f_make_bmd.mjs</a>  
 使用停止？
-- <a href="js/f_make_parent_stations.js">js/f_make_parent_stations.js</a>  
+- <a href="mjs/f_make_parent_stations.mjs">mjs/f_make_parent_stations.mjs</a>  
 標柱のstopからparent_stationを作る
-- <a href="js/f_make_shape_pt_array.js">js/f_make_shape_pt_array.js</a>  
-- <a href="js/f_make_shape_segments.js">js/f_make_shape_segments.js</a>  
-- <a href="js/f_make_ur_routes.js">js/f_make_ur_routes.js</a>  
-- <a href="js/f_number_gtfs.js">js/f_number_gtfs.js</a>  
-- <a href="js/f_offset_segment_array.js">js/f_offset_segment_array.js</a>  
-- <a href="js/f_prepare_gtfs.js">js/f_prepare_gtfs.js</a>  
-- <a href="js/f_prepare_json.js">js/f_prepare_json.js</a>  
-- <a href="js/f_set_color.js">js/f_set_color.js</a>  
+- <a href="mjs/f_make_shape_pt_array.mjs">mjs/f_make_shape_pt_array.mjs</a>  
+- <a href="mjs/f_make_shape_segments.mjs">mjs/f_make_shape_segments.mjs</a>  
+- <a href="mjs/f_make_ur_routes.mjs">mjs/f_make_ur_routes.mjs</a>  
+- <a href="mjs/f_number_gtfs.mjs">mjs/f_number_gtfs.mjs</a>  
+- <a href="mjs/f_offset_segment_array.mjs">mjs/f_offset_segment_array.mjs</a>  
+- <a href="mjs/f_prepare_gtfs.mjs">mjs/f_prepare_gtfs.mjs</a>  
+- <a href="mjs/f_prepare_mjson.mjs">mjs/f_prepare_mjson.mjs</a>  
+- <a href="mjs/f_set_color.mjs">mjs/f_set_color.mjs</a>  
 route_colorがない場合に設定する
-- <a href="js/f_set_route_sort_order.js">js/f_set_route_sort_order.js</a>  
+- <a href="mjs/f_set_route_sort_order.mjs">mjs/f_set_route_sort_order.mjs</a>  
 route_sort_orderがない場合に設定する
-- <a href="js/f_set_stop_type.js">js/f_set_stop_type.js</a>  
-- <a href="js/f_set_width_offset.js">js/f_set_width_offset.js</a>  
-- <a href="js/f_stop_number.js">js/f_stop_number.js</a>  
-- <a href="js/f_xhr_get.js">js/f_xhr_get.js</a>  
+- <a href="mjs/f_set_stop_type.mjs">mjs/f_set_stop_type.mjs</a>  
+- <a href="mjs/f_set_width_offset.mjs">mjs/f_set_width_offset.mjs</a>  
+- <a href="mjs/f_stop_number.mjs">mjs/f_stop_number.mjs</a>  
+- <a href="mjs/f_xhr_get.mjs">mjs/f_xhr_get.mjs</a>  
 XMLHttpRequestにより外部ファイルを読み込む
-- <a href="js/f_zip_to_text.js">js/f_zip_to_text.js</a>  
+- <a href="mjs/f_zip_to_text.mjs">mjs/f_zip_to_text.mjs</a>  
 GTFSのZIPを展開して中のCSVファイルを読み込む
