@@ -1,10 +1,10 @@
-import {f_lonlat_xy} from "./f_lonlat_xy.js";
-import {f_set_width_offset} from "./f_set_width_offset.js";
-import {f_offset_segment_array} from "./f_offset_segment_array.js";
+import {f_lonlat_xy} from "./f_lonlat_xy.mjs";
+import {f_set_width_offset} from "./f_set_width_offset.mjs";
+import {f_offset_segment_array} from "./f_offset_segment_array.mjs";
 
-import {f_make_polyline} from "./f_make_polyline.js";
-import {f_cut_polyline} from "./f_cut_polyline.js";
-import {f_search_route} from "./f_search_route.js";
+import {f_make_polyline} from "./f_make_polyline.mjs";
+import {f_cut_polyline} from "./f_cut_polyline.mjs";
+import {f_search_route} from "./f_search_route.mjs";
 
 export function f_draw(a_bmd, a_settings) {
 	const c_leaflet_map = window.busmapjs[a_settings["busmapjs_id"]].leaflet_map;
