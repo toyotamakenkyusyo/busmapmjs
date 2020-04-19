@@ -15,9 +15,6 @@ console.log("ここ");
 //高速化、遅くなった部分がないか確認
 
 
-//グローバル変数
-let l_map; //leaflet
-
 import {f_input_settings} from "./js/f_input_settings.js";
 import {f_html} from "./js/f_html.js";
 
@@ -75,15 +72,16 @@ window.busmapjs.f_main = async function f_main(a_settings) {
 	
 	//leafletの初期設定
 	if (a_settings["leaflet"] === true) {
-		l_map = L.map("div_leaflet"); //leafletの読み込み。
+		window.busmapjs[a_settings["busmapjs_id"]].leaflet_map = L.map("div_leaflet"); //leafletの読み込み。
+		const c_leaflet_map = window.busmapjs[a_settings["busmapjs_id"]].leaflet_map;
 		if (a_settings["background_map"] === true) {
 			for (let i1 = 0; i1 < a_settings["background_layers"].length; i1++) {
-				L.tileLayer(a_settings["background_layers"][i1][0], a_settings["background_layers"][i1][1]).addTo(l_map); //背景地図（地理院地図等）を表示する。
+				L.tileLayer(a_settings["background_layers"][i1][0], a_settings["background_layers"][i1][1]).addTo(c_leaflet_map); //背景地図（地理院地図等）を表示する。
 			}
 		}
-		L.svg().addTo(l_map); //svg地図を入れる。
+		L.svg().addTo(c_leaflet_map); //svg地図を入れる。
 		if (a_settings["set_view_latlon"] !== null && a_settings["set_view_zoom"] !== null) {
-			l_map.setView(a_settings["set_view_latlon"], a_settings["set_view_zoom"]); //初期表示位置（仮）
+			c_leaflet_map.setView(a_settings["set_view_latlon"], a_settings["set_view_zoom"]); //初期表示位置（仮）
 		}
 	}
 	console.timeEnd("t0");
@@ -194,6 +192,7 @@ window.busmapjs.f_main = async function f_main(a_settings) {
 
 
 function f_open(a_bmd, a_settings) {
+	const c_leaflet_map = window.busmapjs[a_settings["busmapjs_id"]].leaflet_map;
 	console.time("u1");
 	if (a_settings["change"] === true) {
 		//表示するur_routeの設定
@@ -322,18 +321,18 @@ function f_open(a_bmd, a_settings) {
 	console.time("u5");
 	
 	for (let i1 = 0; i1 < a_bmd["parent_stations"].length; i1++) {
-		L.marker({"lon": a_bmd["parent_stations"][i1]["stop_lon"], "lat": a_bmd["parent_stations"][i1]["stop_lat"]}, {"icon": L.divIcon({"html": "<span style=\"writing-mode: " + a_settings["writing_mode"] + ";\" onclick=\"f_set_stop_id('" + a_bmd["parent_stations"][i1]["stop_id"] + "');\">" + a_bmd["parent_stations"][i1]["stop_name"] + "</span>", className: "className", iconSize: [256, 256], iconAnchor: [-4, -4]})}).addTo(l_map);
+		L.marker({"lon": a_bmd["parent_stations"][i1]["stop_lon"], "lat": a_bmd["parent_stations"][i1]["stop_lat"]}, {"icon": L.divIcon({"html": "<span style=\"writing-mode: " + a_settings["writing_mode"] + ";\" onclick=\"f_set_stop_id('" + a_bmd["parent_stations"][i1]["stop_id"] + "');\">" + a_bmd["parent_stations"][i1]["stop_name"] + "</span>", className: "className", iconSize: [256, 256], iconAnchor: [-4, -4]})}).addTo(c_leaflet_map);
 	}
 	console.timeEnd("u5");
 	console.time("u6");
 	
 	f_zoom();
 	//ズームレベル変更→leaflet変更
-	l_map.on("zoom", f_zoom);
+	c_leaflet_map.on("zoom", f_zoom);
 	console.timeEnd("u6");
 	
 	function f_zoom() {
-		let l_zoom_level = l_map.getZoom();
+		let l_zoom_level = c_leaflet_map.getZoom();
 		if (l_zoom_level < a_settings["min_zoom_level"]) {
 			l_zoom_level = a_settings["min_zoom_level"];
 		}
@@ -342,11 +341,11 @@ function f_open(a_bmd, a_settings) {
 		}
 		for (let i1 = a_settings["min_zoom_level"]; i1 <= a_settings["max_zoom_level"]; i1++) {
 			if (i1 === l_zoom_level) {
-				c_groups["zoom_" + String(i1)].addTo(l_map);
-				a_bmd["layer_zoom_" + String(i1)].addTo(l_map);
+				c_groups["zoom_" + String(i1)].addTo(c_leaflet_map);
+				a_bmd["layer_zoom_" + String(i1)].addTo(c_leaflet_map);
 			} else {
-				c_groups["zoom_" + String(i1)].remove(l_map);
-				a_bmd["layer_zoom_" + String(i1)].remove(l_map);
+				c_groups["zoom_" + String(i1)].remove(c_leaflet_map);
+				a_bmd["layer_zoom_" + String(i1)].remove(c_leaflet_map);
 			}
 		}
 	}
