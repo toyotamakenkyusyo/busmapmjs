@@ -1,5 +1,46 @@
-export async function f_main(a_settings) {
 
+import {f_draw} from "./f_draw.js";
+
+import {f_input_settings} from "./f_input_settings.js";
+import {f_html} from "./f_html.js";
+
+
+import {f_xhr_get} from "./f_xhr_get.js";
+import {f_zip_to_text} from "./f_zip_to_text.js";
+import {f_csv_to_json} from "./f_csv_to_json.js";
+import {f_binary_to_json} from "./f_binary_to_json.js"; //GTFS-RTの読み込みに用いる
+
+import {f_from_topojson} from "./f_from_topojson.js";
+import {f_from_geojson} from "./f_from_geojson.js";
+import {f_from_api} from "./f_from_api.js";
+
+import {f_prepare_json} from "./f_prepare_json.js";
+
+import {f_set_stop_type} from "./f_set_stop_type.js";
+import {f_set_route_sort_order} from "./f_set_route_sort_order.js";
+import {f_number_gtfs} from "./f_number_gtfs.js";
+import {f_make_ur_routes} from "./f_make_ur_routes.js";
+
+import {f_set_color} from "./f_set_color.js";
+import {f_make_shape_pt_array} from "./f_make_shape_pt_array.js";
+import {f_make_parent_stations} from "./f_make_parent_stations.js";
+import {f_count_trip_number} from "./f_count_trip_number.js";
+
+
+import {f_lonlat_xy} from "./f_lonlat_xy.js";
+import {f_make_shape_segments} from "./f_make_shape_segments.js";
+import {f_set_width_offset} from "./f_set_width_offset.js";
+import {f_offset_segment_array} from "./f_offset_segment_array.js";
+
+import {f_make_polyline} from "./f_make_polyline.js";
+import {f_cut_polyline} from "./f_cut_polyline.js";
+import {f_search_route} from "./f_search_route.js";
+
+export async function f_main(a_settings) {
+	if (window.busmapjs === undefined) {
+		window.busmapjs = {};
+	}
+	
 	console.time("T");
 	console.time("t0");
 	a_settings = f_input_settings(a_settings); //初期設定
@@ -109,7 +150,7 @@ export async function f_main(a_settings) {
 	console.timeEnd("t3");
 	console.timeEnd("T");
 	console.time("U");
-	window.busmapjs.f_draw(c_bmd, a_settings); //6s遅い！
+	f_draw(c_bmd, a_settings); //6s遅い！
 	console.timeEnd("U");
 	
 }
