@@ -7,7 +7,6 @@
 		<script src="https://unpkg.com/leaflet@1.3.1/dist/leaflet.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/leaflet-curve@1.0.0/leaflet.curve.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/zlibjs@0.3.1/bin/unzip.min.js"></script>
-		<script src="busmapm.js" type="module"></script>
 		<title>豐多摩研究所 busmapjsの使用例</title>
 	</head>
 	<body>
@@ -18,6 +17,106 @@
 		<div id="div1"></div>
 		<script type="module">
 		//<![CDATA[
+
+
+//"use strict";
+//これ以外に読み込みが必要なもの
+//leaflet
+//Leaflet.curve
+//zip.min.js
+//rt関係
+//f_busmap({});
+console.log("ここ");
+
+
+//開発予定メモ
+//SVG出力機能の回復
+//クリックしたときの各種機能の回復
+//時刻表の回復
+//高速化、遅くなった部分がないか確認
+
+import {f_main} from "./js/f_main.js";
+import {f_draw} from "./js/f_draw.js";
+
+import {f_input_settings} from "./js/f_input_settings.js";
+import {f_html} from "./js/f_html.js";
+
+
+import {f_xhr_get} from "./js/f_xhr_get.js";
+import {f_zip_to_text} from "./js/f_zip_to_text.js";
+import {f_csv_to_json} from "./js/f_csv_to_json.js";
+import {f_binary_to_json} from "./js/f_binary_to_json.js"; //GTFS-RTの読み込みに用いる
+
+import {f_from_topojson} from "./js/f_from_topojson.js";
+import {f_from_geojson} from "./js/f_from_geojson.js";
+import {f_from_api} from "./js/f_from_api.js";
+
+import {f_prepare_json} from "./js/f_prepare_json.js";
+
+import {f_set_stop_type} from "./js/f_set_stop_type.js";
+import {f_set_route_sort_order} from "./js/f_set_route_sort_order.js";
+import {f_number_gtfs} from "./js/f_number_gtfs.js";
+import {f_make_ur_routes} from "./js/f_make_ur_routes.js";
+
+import {f_set_color} from "./js/f_set_color.js";
+import {f_make_shape_pt_array} from "./js/f_make_shape_pt_array.js";
+import {f_make_parent_stations} from "./js/f_make_parent_stations.js";
+import {f_count_trip_number} from "./js/f_count_trip_number.js";
+
+
+import {f_lonlat_xy} from "./js/f_lonlat_xy.js";
+import {f_make_shape_segments} from "./js/f_make_shape_segments.js";
+import {f_set_width_offset} from "./js/f_set_width_offset.js";
+import {f_offset_segment_array} from "./js/f_offset_segment_array.js";
+
+import {f_make_polyline} from "./js/f_make_polyline.js";
+import {f_cut_polyline} from "./js/f_cut_polyline.js";
+import {f_search_route} from "./js/f_search_route.js";
+
+window.busmapjs = {}; //ここに関数などをまとめる
+
+//関数をどこでも使えるようにする
+window.busmapjs.f_main = f_main;
+window.busmapjs.f_draw = f_draw;
+
+window.f_input_settings = f_input_settings;
+window.f_html = f_html;
+
+
+window.f_xhr_get = f_xhr_get;
+window.f_zip_to_text = f_zip_to_text;
+window.f_csv_to_json = f_csv_to_json;
+window.f_binary_to_json = f_binary_to_json;
+
+window.f_from_topojson = f_from_topojson;
+window.f_from_geojson = f_from_geojson;
+window.f_from_api = f_from_api;
+
+window.f_prepare_json = f_prepare_json;
+
+window.f_set_stop_type = f_set_stop_type;
+window.f_set_route_sort_order = f_set_route_sort_order;
+window.f_number_gtfs = f_number_gtfs;
+window.f_make_ur_routes = f_make_ur_routes;
+
+window.f_set_color = f_set_color;
+window.f_make_shape_pt_array = f_make_shape_pt_array;
+window.f_make_parent_stations = f_make_parent_stations;
+window.f_count_trip_number = f_count_trip_number;
+
+
+window.f_lonlat_xy = f_lonlat_xy;
+window.f_make_shape_segments = f_make_shape_segments;
+window.f_set_width_offset = f_set_width_offset;
+window.f_offset_segment_array = f_offset_segment_array;
+
+window.f_make_polyline = f_make_polyline;
+window.f_cut_polyline = f_cut_polyline;
+window.f_search_route = f_search_route;
+
+
+
+
 window.busmapjs.f_main({"cors_url": "", "rt": false, "data": "https://toyotamakenkyusyo.github.io/gtfs/3270001000564/latest/GTFS-JP.zip", "data_type": "gtfs", "div_id": "div1", "global": true, "change": false, "leaflet": false, "set_view_latlon": [35.454518, 133.850126], "set_view_zoom": 16, "clickable": false, "timetable": false, "direction": true, "parent_route_id": "jp_parent_route_id", "stop_name": true, "stop_name_overlap": true, "zoom_level": 16, "svg_zoom_level": 15, "background_map": true, "background_layers": [["https://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png", {attribution: "<a href=\"https://maps.gsi.go.jp/development/ichiran.html\">地理院タイル</a>", opacity: 0.25}], ["https://busroutemap.github.io/ttrmap/xyz/lbmli/{z}/{x}/{y}.png", {attribution: "<a href='https://busroutemap.github.io/tottori/index.html' target='_blank'>busroutemap (CC BY 4.0)</a>", opacity: 0.8}]], "font_size": 16, "font_family": "'源ノ角ゴシック'", "stop_color_standard": "#FFFFFF", "stop_color_nonstandard": "#FFFF00", "stop_color_location": "#c0c0c0", "stop_stroke_color": "#808080", "stop_stroke_with": 1, "show_stop_location": false, "min_space_width": 2, "min_width": 4});
 		//]]>
 		</script>
