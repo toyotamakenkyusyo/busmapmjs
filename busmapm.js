@@ -17,10 +17,6 @@ console.log("ここ");
 
 //グローバル変数
 let l_map; //leaflet
-let l_data = {};//グローバルな情報を扱う。
-let l_tooltip_x = 0;//ツールチップの位置
-let l_tooltip_y = 0;//ツールチップの位置
-let l_settings = {};//設定
 
 import {f_input_settings} from "./js/f_input_settings.js";
 import {f_html} from "./js/f_html.js";
@@ -167,12 +163,6 @@ window.busmapjs.f_main = async function f_main(a_settings) {
 	console.time("t3");
 	f_make_shape_segments(c_bmd, f_lonlat_xy, a_settings); //新規
 	console.timeEnd("t3");
-	console.time("t4");
-	if (a_settings["global"] === true) { //グローバルに移す
-		l_data = c_bmd;
-		l_settings = a_settings;
-	}
-	console.timeEnd("t4");
 	console.timeEnd("T");
 	console.time("U");
 	f_open(c_bmd, a_settings); //6s遅い！
