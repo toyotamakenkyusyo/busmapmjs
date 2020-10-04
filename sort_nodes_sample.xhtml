@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta charset="UTF-8" />
+		<style>body {font-family: IPAmjMincho;}</style>
+		<title>タイトル</title>
+	</head>
+	<body>
+		<h1>タイトル</h1>
+		<div id="div1"></div>
+		<div id="div2"></div>
+		<script type="module">
+		//<![CDATA[
+import {f_sort_nodes} from "./mjs/f_sort_nodes.mjs";
+
+//グラフの元になる歩道達
+const c_walk_array/*: {
+	"node_array": string[]; //節点idの列
+}[]*/ = [
+	{"node_array": ["A", "B", "C", "D", "E", "F", "G"]},
+	{"node_array": ["G", "F", "E", "D", "C", "B", "A"]},
+	{"node_array": ["A", "B", "C", "D", "E", "H", "I", "J", "K"]},
+	{"node_array": ["J", "I", "H", "E", "D", "C", "B", "A"]},
+	{"node_array": ["G", "F", "E", "H", "I", "J", "K"]},
+	{"node_array": ["J", "I", "H", "E", "F", "G"]}
+]; //サンプルデータ
+
+
+const c_stop_array = f_sort_nodes(c_walk_array);
+
+
+const c_stop_patterns/*: number[][]*/ = [];
+for (let i1 = 0; i1 < c_walk_array.length; i1++) {
+	c_stop_patterns.push([]);
+	for (let i2 = 0; i2 < c_stop_array.length; i2++) {
+		c_stop_patterns[i1].push("");
+		for (let i3 = 0; i3 < c_walk_array[i1]["node_array"].length; i3++) {
+			const c_node_id/*: string*/ = c_walk_array[i1]["node_array"][i3];
+			if (c_node_id === c_stop_array[i2]) {
+				let l_pre_node/*: string*/ = "";
+				let l_post_node/*: string*/ = "";
+				if (i3 > 0) {
+					l_pre_node = c_walk_array[i1]["node_array"][i3 - 1];
+				}
+				if (i3 < c_walk_array[i1]["node_array"].length - 1) {
+					l_post_node = c_walk_array[i1]["node_array"][i3 + 1];
+				}
+				let l_next_node_1/*: string*/ = "_";
+				let l_next_node_2/*: string*/ = "_";
+				if (i2 > 0) {
+					l_next_node_1 = c_stop_array[i2 - 1];
+				}
+				if (i2 < c_stop_array.length - 1) {
+					l_next_node_2 = c_stop_array[i2 + 1]
+					;
+				}
+				if (l_pre_node === l_next_node_1 || l_pre_node === l_next_node_2 || l_post_node === l_next_node_1 || l_post_node === l_next_node_2) {
+					c_stop_patterns[i1][i2] = String(i3);
+				}
+			}
+			
+		}
+	}
+}
+console.log(c_stop_patterns);
+
+let l_table/*: string*/ = "";
+for (let i1 = 0; i1 < c_stop_array.length; i1 ++) {
+	l_table += "<tr><td>" + c_stop_array[i1] + "</td>";
+	for (let i2 = 0; i2 < c_stop_patterns.length; i2++) {
+		l_table += "<td>" + c_stop_patterns[i2][i1] + "</td>";
+	}
+	l_table += "</tr>";
+}
+document.getElementById("div2").innerHTML += "<table border=\"1\"><tbody>" + l_table + "</tbody></table>";
+
+
+
+		//]]>
+		</script>
+	</body>
+</html>
