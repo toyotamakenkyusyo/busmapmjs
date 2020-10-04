@@ -356,24 +356,91 @@ export function f_sort_nodes(a_walk_array/*: {
 	console.log(c_link_array);
 	
 	
+	const c_node_array/*: {
+		"node_id": string; //節点id
+		"head": boolean; //始点はtrue
+		"tail": boolean; //終点はtrue
+		"delete": boolean; //消すものはtrue
+	}[]*/ = [];
 	
-	const c_node_array/*: string[]*/ = []; //節点idの配列
 	for (let i1 = 0; i1 < c_link_array.length; i1++) {
 		const c_ids/*: string*/ = c_link_array[i1]["id"].split("_");
 		const c_direction/*: number*/ = c_link_array[i1]["direction"];
 		if (c_direction === 1) {
 			for (let i2 = 1; i2 < c_ids.length - 1; i2++) {
-				c_node_array.push(c_ids[i2]);
+				let l_head/*: boolean*/ = false; //始点はtrue
+				let l_tail/*: boolean*/ = false; //終点はtrue
+				let l_delete/*: boolean*/ = false;
+				if (i2 === 1) {
+					l_head = true;
+					l_delete = true; //始点と終点は仮に全部trueにする
+				}
+				if (i2 === c_ids.length - 2) {
+					l_tail = true;
+					l_delete = true; //始点と終点は仮に全部trueにする
+				}
+				c_node_array.push({
+					"node_id": c_ids[i2],
+					"head": l_head,
+					"tail": l_tail,
+					"delete": l_delete
+				});
 			}
 		} else if (c_direction === -1) {
 			for (let i2 = c_ids.length - 2; i2 >= 1; i2--) {
-				c_node_array.push(c_ids[i2]);
+				let l_head/*: boolean*/ = false; //始点はtrue
+				let l_tail/*: boolean*/ = false; //終点はtrue
+				let l_delete/*: boolean*/ = false;
+				if (i2 === c_ids.length - 2) {
+					l_head = true;
+					l_delete = true; //始点と終点は仮に全部trueにする
+				}
+				if (i2 === 1) {
+					l_tail = true;
+					l_delete = true; //始点と終点は仮に全部trueにする
+				}
+				c_node_array.push({
+					"node_id": c_ids[i2],
+					"head": l_head,
+					"tail": l_tail,
+					"delete": l_delete
+				});
 			}
 		}
 	}
 	
+	//複数ある節点を1つにしぼる
+	for (let i1 in c_graph_2["nodes"]) {
+		let l_exist/*: boolean*/ = false; //あったらtrue
+		for (let i2 = 0; i2 < c_node_array.length; i2++) {
+			if (c_node_array[i2]["node_id"] === i1 && c_node_array[i2]["head"] === true) {
+				c_node_array[i2]["delete"] = false; //最初に始点にでたときに残す
+				l_exist = true;
+				break;
+			}
+		}
+		if (l_exist === false) { //始点として出現しない場合
+			for (let i2 = c_node_array.length - 1; i2 >= 1; i2--) {
+				if (c_node_array[i2]["node_id"] === i1 && c_node_array[i2]["tail"] === true) {
+					c_node_array[i2]["delete"] = false; //最後に終点にでたときに残す
+					l_exist = true;
+					break;
+				}
+			}
+		}
+	}
+	
+	const c_node_array_2/*: string[]*/ = []; //節点idのみの列
+	for (let i1 = 0; i1 < c_node_array.length; i1++) {
+		if (c_node_array[i1]["delete"] === false) {
+			c_node_array_2.push(c_node_array[i1]["node_id"]);
+		}
+	}
+	
+	
+	
 	
 	console.log(c_node_array);
 	
-	return c_node_array;
+	return c_node_array_2;
 }

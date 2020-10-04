@@ -29,40 +29,66 @@ const c_walk_array/*: {
 
 const c_stop_array = f_sort_nodes(c_walk_array);
 
+const c_stop_array_index/*: {
+	[key: string]: number; //節点idとそれが何番目か
+}*/ = {};
+for (let i1 = 0; i1 < c_stop_array.length; i1++) {
+	c_stop_array_index[c_stop_array[i1]] = i1;
+}
+
 
 const c_stop_patterns/*: number[][]*/ = [];
 for (let i1 = 0; i1 < c_walk_array.length; i1++) {
 	c_stop_patterns.push([]);
 	for (let i2 = 0; i2 < c_stop_array.length; i2++) {
-		c_stop_patterns[i1].push("");
-		for (let i3 = 0; i3 < c_walk_array[i1]["node_array"].length; i3++) {
-			const c_node_id/*: string*/ = c_walk_array[i1]["node_array"][i3];
-			if (c_node_id === c_stop_array[i2]) {
-				let l_pre_node/*: string*/ = "";
-				let l_post_node/*: string*/ = "";
-				if (i3 > 0) {
-					l_pre_node = c_walk_array[i1]["node_array"][i3 - 1];
-				}
-				if (i3 < c_walk_array[i1]["node_array"].length - 1) {
-					l_post_node = c_walk_array[i1]["node_array"][i3 + 1];
-				}
-				let l_next_node_1/*: string*/ = "_";
-				let l_next_node_2/*: string*/ = "_";
-				if (i2 > 0) {
-					l_next_node_1 = c_stop_array[i2 - 1];
-				}
-				if (i2 < c_stop_array.length - 1) {
-					l_next_node_2 = c_stop_array[i2 + 1]
-					;
-				}
-				if (l_pre_node === l_next_node_1 || l_pre_node === l_next_node_2 || l_post_node === l_next_node_1 || l_post_node === l_next_node_2) {
-					c_stop_patterns[i1][i2] = String(i3);
-				}
+		c_stop_patterns[i1].push(""); //初期化
+	}
+	
+	const c_number_array/*: number*/ = []; //何番目の停留所か
+	for (let i2 = 0; i2 < c_walk_array[i1]["node_array"].length; i2++) {
+		c_number_array.push(c_stop_array_index[c_walk_array[i1]["node_array"][i2]]);
+	}
+	
+	let l_count = 0; //左側の余白数
+	for (let i2 = 0; i2 < c_number_array.length; i2++) {
+		for (let i3 = 0; i3 < l_count; i3++) {
+			c_stop_patterns[i1][c_number_array[i2]] += "　";
+		}
+		let l_direction/*: string*/ = ""; //向きの記号
+		
+		if (i2 === 0) {
+			if (c_number_array[i2] < c_number_array[i2 + 1]) {
+				c_stop_patterns[i1][c_number_array[i2]] += "▼";
+			} else {
+				c_stop_patterns[i1][c_number_array[i2]] += "▲";
 			}
-			
+		} else if (i2 === c_number_array.length - 1) {
+			if (c_number_array[i2 - 1] < c_number_array[i2]) {
+				c_stop_patterns[i1][c_number_array[i2]] += "▼";
+			} else {
+				c_stop_patterns[i1][c_number_array[i2]] += "▲";
+			}
+		} else {
+			if (c_number_array[i2 - 1] < c_number_array[i2] && c_number_array[i2] < c_number_array[i2 + 1]) {
+				c_stop_patterns[i1][c_number_array[i2]] += "▼";
+			} else if (c_number_array[i2 - 1] > c_number_array[i2] && c_number_array[i2] > c_number_array[i2 + 1]) {
+				c_stop_patterns[i1][c_number_array[i2]] += "▲";
+			} else if (c_number_array[i2 - 1] < c_number_array[i2] && c_number_array[i2] > c_number_array[i2 + 1]) {
+				c_stop_patterns[i1][c_number_array[i2]] += "▼▲";
+				l_count += 1;
+			} else if (c_number_array[i2 - 1] > c_number_array[i2] && c_number_array[i2] < c_number_array[i2 + 1]) {
+				c_stop_patterns[i1][c_number_array[i2]] += "▲▼";
+				l_count += 1;
+			}
 		}
 	}
 }
+
+console.log(-1 < null);
+console.log(0 < null);
+console.log(1 < null);
+console.log(-2 < null);
+
 console.log(c_stop_patterns);
 
 let l_table/*: string*/ = "";
