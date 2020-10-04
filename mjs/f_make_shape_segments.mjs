@@ -418,11 +418,21 @@ export function f_make_shape_segments(a_data, a_lonlat_xy, a_settings) {
 			const c_shape_segment = c_shape_segments[c_shape_segment_arrays[i1][i2]["id"]];
 			if (c_shape_segment_arrays[i1][i2]["direction"] === 1) {
 				for (let i3 = 0; i3 < c_shape_segment["near_stops"].length; i3++) {
+					if (i3 >= 1) {
+						if(c_shape_segment["near_stops"][i3 - 1]["id"] === c_shape_segment["near_stops"][i3]["id"]) {
+							continue; //同じ位置は重複させない
+						}
+					}
 					c_child_shape_pt_arrays[i1].push(c_shape_segment["near_stops"][i3]["id"]);
 				}
 				c_child_shape_pt_arrays[i1].push(c_shape_segment["eid"]);
 			} else if (c_shape_segment_arrays[i1][i2]["direction"] === -1) {
-				for (let i3 =  c_shape_segment["near_stops"].length - 1; i3 >=0; i3--) {
+				for (let i3 = c_shape_segment["near_stops"].length - 1; i3 >=0; i3--) {
+					if (i3 <= c_shape_segment["near_stops"].length - 2) {
+						if(c_shape_segment["near_stops"][i3 + 1]["id"] === c_shape_segment["near_stops"][i3]["id"]) {
+							continue; //同じ位置は重複させない
+						}
+					}
 					c_child_shape_pt_arrays[i1].push(c_shape_segment["near_stops"][i3]["id"]);
 				}
 				c_child_shape_pt_arrays[i1].push(c_shape_segment["sid"]);

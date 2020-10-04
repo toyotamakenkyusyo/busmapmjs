@@ -235,7 +235,8 @@ function f_offset(a_1, a_2) { //左手系に注意
 	//d1tはずらし幅z1、z2のとき、z1 * d1t[0] + z2 * d1t[1] + d1t[2]の値
 	
 	if (Math.abs(c_xyxynn) <= 0.02) { //平行に近い
-		return {"parallel": true, "d1t": [0, 0, 1], "d2t": [0, 0, 0], "xy": [{"x": [c_v1yn, 0, c_p2x], "y": [c_v1xn, 0, c_p2y]}, {"x": [c_v1yn * 0.5, c_v2yn * 0.5, (c_p2x + c_p3x) * 0.5], "y": [c_v1xn * 0.5, c_v2xn * 0.5, (c_p2y + c_p3y) * 0.5]}, {"x": [0, c_v2yn, c_p3x], "y": [0, c_v2xn, c_p3y]}]};
+		return {"parallel": true, "d1t": [0, 0, 1], "d2t": [0, 0, 0], "xy": [{"x": [c_v1yn, 0, c_p2x], "y": [c_v1xn, 0, c_p2y]}, {"x": [c_v1yn * 0.5, c_v2yn * 0.5, (c_p2x + c_p3x) * 0.5], "y": [c_v1xn * 0.5, c_v2xn * 0.5, (c_p2y + c_p3y) * 0.5]}, {"x": [0, c_v2yn, c_p3x], "y": [0, c_v2xn, c_p3y]}]}; //本来
+		//return {"parallel": true, "d1t": [1 / c_v1n, -1 / c_v1n, 1], "d2t": [1 / c_v2n, -1 / c_v2n, 0], "xy": [{"x": [c_v1yn + c_v1xn, -1 * c_v1xn, c_p2x], "y": [c_v1xn + c_v1yn, -1 * c_v1yn, c_p2y]}, {"x": [(c_v1yn + c_v1xn + c_v2xn) * 0.5, (c_v2yn - c_v1xn - c_v2xn) * 0.5, (c_p2x + c_p3x) * 0.5], "y": [(c_v1xn + c_v1yn + c_v2yn) * 0.5, (c_v2xn - c_v1yn - c_v2yn) * 0.5, (c_p2y + c_p3y) * 0.5]}, {"x": [c_v2xn, c_v2yn - c_v2xn, c_p3x], "y": [c_v2yn, c_v2xn - c_v2yn, c_p3y]}]}; //改良？に失敗
 	}
 	//p2とp3が同じで、折り返し（p1とp4が同じ）の場合は角を丸めたいが、場合分けを省略
 	//p2とp3が同じで、標柱で切断した点の場合、場合分けを省略

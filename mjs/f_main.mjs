@@ -16,6 +16,8 @@ import {f_from_api} from "./f_from_api.mjs";
 
 import {f_prepare_json} from "./f_prepare_json.mjs";
 
+import {f_set_temp_shape_id} from "./f_set_temp_shape_id.mjs";
+import {f_make_shape} from "./f_make_shape.mjs";
 import {f_set_stop_type} from "./f_set_stop_type.mjs";
 import {f_set_route_sort_order} from "./f_set_route_sort_order.mjs";
 import {f_number_gtfs} from "./f_number_gtfs.mjs";
@@ -86,6 +88,8 @@ export async function f_main(a_settings) {
 		}
 		console.timeEnd("t11");
 		console.time("t12");
+		f_set_temp_shape_id(l_data);
+		f_make_shape(l_data);
 		f_set_stop_type(l_data); //pickup_typeとdrop_off_typeを補う（ur_routesを作るため）
 		f_set_route_sort_order(l_data); //route_sort_orderを補う（ur_routesを作るため）
 		f_number_gtfs(l_data); //緯度、経度、順番の型を数に変換
