@@ -44,7 +44,7 @@ for (let i1 = 0; i1 < c_walk_array.length; i1++) {
 		c_stop_patterns[i1].push(""); //初期化
 	}
 	
-	const c_number_array/*: number*/ = []; //何番目の停留所か
+	const c_number_array/*: number[]*/ = []; //何番目の停留所か
 	for (let i2 = 0; i2 < c_walk_array[i1]["node_array"].length; i2++) {
 		c_number_array.push(c_stop_array_index[c_walk_array[i1]["node_array"][i2]]);
 	}
@@ -54,19 +54,18 @@ for (let i1 = 0; i1 < c_walk_array.length; i1++) {
 		for (let i3 = 0; i3 < l_count; i3++) {
 			c_stop_patterns[i1][c_number_array[i2]] += "　";
 		}
-		let l_direction/*: string*/ = ""; //向きの記号
 		
 		if (i2 === 0) {
 			if (c_number_array[i2] < c_number_array[i2 + 1]) {
-				c_stop_patterns[i1][c_number_array[i2]] += "▼";
+				c_stop_patterns[i1][c_number_array[i2]] += "▽";
 			} else {
-				c_stop_patterns[i1][c_number_array[i2]] += "▲";
+				c_stop_patterns[i1][c_number_array[i2]] += "△";
 			}
 		} else if (i2 === c_number_array.length - 1) {
 			if (c_number_array[i2 - 1] < c_number_array[i2]) {
-				c_stop_patterns[i1][c_number_array[i2]] += "▼";
+				c_stop_patterns[i1][c_number_array[i2]] += "▽";
 			} else {
-				c_stop_patterns[i1][c_number_array[i2]] += "▲";
+				c_stop_patterns[i1][c_number_array[i2]] += "△";
 			}
 		} else {
 			if (c_number_array[i2 - 1] < c_number_array[i2] && c_number_array[i2] < c_number_array[i2 + 1]) {
@@ -100,6 +99,112 @@ for (let i1 = 0; i1 < c_stop_array.length; i1 ++) {
 	l_table += "</tr>";
 }
 document.getElementById("div2").innerHTML += "<table border=\"1\"><tbody>" + l_table + "</tbody></table>";
+
+
+
+const c_svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+c_svg.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+c_svg.setAttribute("version", "1.1");
+c_svg.setAttribute("xmlns:xlink", "http://www.w3.org/1999/xlink");
+c_svg.setAttribute("width", "256");
+c_svg.setAttribute("height", "256");
+c_svg.setAttribute("viewBox", "0 -16 256 256");
+document.getElementById("div2").appendChild(c_svg);
+
+
+const c_g_polyline = document.createElementNS("http://www.w3.org/2000/svg", "g");
+c_svg.appendChild(c_g_polyline);
+const c_g_marker = document.createElementNS("http://www.w3.org/2000/svg", "g");
+c_svg.appendChild(c_g_marker);
+
+let l_left/*: number*/ = 0;
+for (let i1 = 0; i1 < c_walk_array.length; i1++) {
+	l_left += 1;
+	const c_number_array/*: number[]*/ = []; //何番目の停留所か
+	for (let i2 = 0; i2 < c_walk_array[i1]["node_array"].length; i2++) {
+		c_number_array.push(c_stop_array_index[c_walk_array[i1]["node_array"][i2]]);
+	}
+	
+	const c_polyline = document.createElementNS("http://www.w3.org/2000/svg", "path");
+	c_g_polyline.appendChild(c_polyline);
+	c_polyline.setAttribute("stroke-width", "4");
+	c_polyline.setAttribute("stroke", "#808080");
+	c_polyline.setAttribute("fill", "none");
+	let l_d/*: string*/ = "";
+	
+	for (let i2 = 0; i2 < c_number_array.length; i2++) {
+		let l_end/*: boolean*/ = false; //端のときtrue
+		let l_rotate/*: boolean*/ = null; //180度回転（上向き）のときtrue
+		let l_two/*: boolean*/ = false; //2つめがあるときtrue
+		if (i2 === 0) {
+			l_end = true;
+			if (c_number_array[i2] < c_number_array[i2 + 1]) {
+				l_rotate = false;
+			} else {
+				l_rotate = true;
+			}
+		} else if (i2 === c_number_array.length - 1) {
+			l_end = true;
+			if (c_number_array[i2 - 1] < c_number_array[i2]) {
+				l_rotate = false;
+			} else {
+				l_rotate = true;
+			}
+		} else {
+			if (c_number_array[i2 - 1] < c_number_array[i2] && c_number_array[i2] < c_number_array[i2 + 1]) {
+				l_rotate = false;
+			} else if (c_number_array[i2 - 1] > c_number_array[i2] && c_number_array[i2] > c_number_array[i2 + 1]) {
+				l_rotate = true;
+			} else if (c_number_array[i2 - 1] < c_number_array[i2] && c_number_array[i2] > c_number_array[i2 + 1]) {
+				l_rotate = false;
+				l_two = true;
+			} else if (c_number_array[i2 - 1] > c_number_array[i2] && c_number_array[i2] < c_number_array[i2 + 1]) {
+				l_rotate = true;
+				l_two = true;
+			}
+		}
+		
+		const c_first = document.createElementNS("http://www.w3.org/2000/svg", "path");
+		c_g_marker.appendChild(c_first);
+		c_first.setAttribute("stroke-width", "2");
+		c_first.setAttribute("stroke", "#000000");
+		if (l_end === true) {
+			c_first.setAttribute("fill", "#FFFFFF");
+		}
+		c_first.setAttribute("d", "M0,4 L4,-4 L-4,-4 Z");
+		let l_translate/*: string*/ = "translate(" + String(l_left * 20) + "," + String(c_number_array[i2] * 20) + ")";
+		if (l_rotate === true) {
+			l_translate += " rotate(180)";
+		}
+		c_first.setAttribute("transform", l_translate);
+		
+		if (i2 === 0) {
+			l_d += "M";
+		} else {
+			l_d += "L";
+		}
+		l_d += String(l_left * 20) + "," + String(c_number_array[i2] * 20) + " ";
+		
+		if (l_two === true) {
+			l_left += 1;
+			l_d += "L" + String(l_left * 20) + "," + String(c_number_array[i2] * 20) + " ";
+			const c_second = document.createElementNS("http://www.w3.org/2000/svg", "path");
+			c_g_marker.appendChild(c_second);
+			c_second.setAttribute("stroke-width", "2");
+			c_second.setAttribute("stroke", "#000000");
+			c_second.setAttribute("d", "M0,4 L4,-4 L-4,-4 Z");
+			l_translate = "translate(" + String(l_left * 20) + "," + String(c_number_array[i2] * 20) + ")";
+			if (l_rotate === false) {
+				l_translate += " rotate(180)";
+			}
+			c_second.setAttribute("transform", l_translate);
+		}
+	}
+	c_polyline.setAttribute("d", l_d);
+}
+
+
+
 
 
 
