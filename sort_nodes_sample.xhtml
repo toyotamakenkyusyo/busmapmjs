@@ -27,6 +27,22 @@ const c_walk_array/*: {
 ]; //サンプルデータ
 
 
+let l_list_text/**/ = "";
+for (let i1 = 0; i1 < c_walk_array.length; i1++) {
+	if (i1 !== 0) {
+		l_list_text += "<br />";
+	}
+	for (let i2 = 0; i2 < c_walk_array[i1]["node_array"].length; i2++) {
+		if (i2 !== 0) {
+			l_list_text += "→";
+		}
+		l_list_text += c_walk_array[i1]["node_array"][i2];
+	}
+}
+
+document.getElementById("div1").innerHTML += l_list_text;
+
+
 const c_stop_array = f_sort_nodes(c_walk_array);
 
 const c_stop_array_index/*: {
@@ -203,7 +219,13 @@ for (let i1 = 0; i1 < c_walk_array.length; i1++) {
 	c_polyline.setAttribute("d", l_d);
 }
 
-
+for (let i1 = 0; i1 < c_stop_array.length; i1++) {
+	const c_text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+	c_text.textContent = c_stop_array[i1];
+	c_text.setAttribute("x", (l_left + 1) * 20);
+	c_text.setAttribute("y", i1 * 20 + 6);
+	c_g_marker.appendChild(c_text);
+}
 
 
 
