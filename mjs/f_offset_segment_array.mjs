@@ -30,7 +30,7 @@ export function f_offset_segment_array(a_segment_array) {
 					(0 < i2) && (i2 < l_segment_array.length - 1) //最初と最後は必ず残すので除く
 					&& (
 						(l_segment_array[i2]["st"] > l_segment_array[i2]["et"])
-						&& ((l_segment_array[i2 - 1]["st"] <= l_segment_array[i2 - 1]["et"]) || (l_segment_array[i2 + 1]["st"] <= l_segment_array[i2 + 1]["et"]))
+						&& ((l_segment_array[i2 - 1]["st"] < l_segment_array[i2 - 1]["et"]) || (l_segment_array[i2 + 1]["st"] < l_segment_array[i2 + 1]["et"]))
 					) //順序が逆（隣の少なくとも一方は順）
 					&& (
 						(a_settings["separate_stops"] === true && l_segment_array[i2]["s_stop"] === false && l_segment_array[i2]["e_stop"] === false) //停車地を分ける、停車地がない場合
@@ -123,6 +123,7 @@ function f_offset_point(a_1, a_2, a_settings) { //左手系に注意
 	//ずらし幅
 	const c_s1z = c_s1["z"];
 	const c_s2z = c_s2["z"];
+	//tの値
 	c_s1["et"] = c_s1z * c_z["d1t"][0] + c_s2z * c_z["d1t"][1] + c_z["d1t"][2];
 	c_s2["st"] = c_s1z * c_z["d2t"][0] + c_s2z * c_z["d2t"][1] + c_z["d2t"][2];
 	
@@ -138,38 +139,15 @@ function f_offset_point(a_1, a_2, a_settings) { //左手系に注意
 	
 	//以下は後でまとめてもよい？
 	const c_xy = [];
-	if (c_z["parallel"] === true) { //3点
-		/*
-		c_xy.push({"curve": false, "x": c_s1z * c_z["xy"][0]["x"][0] + c_s2z * c_z["xy"][0]["x"][1] + c_z["xy"][0]["x"][2], "y": c_s1z * c_z["xy"][0]["y"][0] + c_s2z * c_z["xy"][0]["y"][1] + c_z["xy"][0]["y"][2]});
-		c_xy.push({"curve": false, "x": c_s1z * c_z["xy"][1]["x"][0] + c_s2z * c_z["xy"][1]["x"][1] + c_z["xy"][1]["x"][2], "y": c_s1z * c_z["xy"][1]["y"][0] + c_s2z * c_z["xy"][1]["y"][1] + c_z["xy"][1]["y"][2]});
-		c_xy.push({"curve": false, "x": c_s1z * c_z["xy"][2]["x"][0] + c_s2z * c_z["xy"][2]["x"][1] + c_z["xy"][2]["x"][2], "y": c_s1z * c_z["xy"][2]["y"][0] + c_s2z * c_z["xy"][2]["y"][1] + c_z["xy"][2]["y"][2]});
-		*/
-		
-		
-		
-		c_xy.push({
-			"curve": false,
-			"x": c_s1z * c_z["xy"][0]["x"][0] + c_s2z * c_z["xy"][0]["x"][1] + c_z["xy"][0]["x"][2] - l_extend * c_z["xy"][0]["y"][0],
-			"y": c_s1z * c_z["xy"][0]["y"][0] + c_s2z * c_z["xy"][0]["y"][1] + c_z["xy"][0]["y"][2] + l_extend * c_z["xy"][0]["x"][0]
-		});
-		c_xy.push({
-			"curve": false,
-			"x": c_s1z * c_z["xy"][1]["x"][0] + c_s2z * c_z["xy"][1]["x"][1] + c_z["xy"][1]["x"][2] - l_extend * (c_z["xy"][0]["y"][0] + c_z["xy"][2]["y"][1]) * 0.5,
-			"y": c_s1z * c_z["xy"][1]["y"][0] + c_s2z * c_z["xy"][1]["y"][1] + c_z["xy"][1]["y"][2] + l_extend * (c_z["xy"][0]["x"][0] + c_z["xy"][2]["x"][1]) * 0.5
-		});
-		c_xy.push({
-			"curve": false,
-			"x": c_s1z * c_z["xy"][2]["x"][0] + c_s2z * c_z["xy"][2]["x"][1] + c_z["xy"][2]["x"][2] - l_extend * c_z["xy"][2]["y"][1],
-			"y": c_s1z * c_z["xy"][2]["y"][0] + c_s2z * c_z["xy"][2]["y"][1] + c_z["xy"][2]["y"][2] + l_extend * c_z["xy"][2]["x"][1]
-		});
-		//tの値もずらす
-		
-		c_s1["et"] += l_extend / (((c_s1["sx"] - c_s1["ex"]) ** 2 + (c_s1["sy"] - c_s1["ey"]) ** 2) ** 0.5);
-		c_s2["st"] += l_extend / (((c_s2["sx"] - c_s2["ex"]) ** 2 + (c_s2["sy"] - c_s2["ey"]) ** 2) ** 0.5);
-		
-		
-		
-	} else if (c_z["parallel"] === false && a_settings["curve"] === true && c_s1["et"] >1 && c_s2["st"] < 0) { //3点、曲線
+	if (c_z["parallel"] === true || (c_z["parallel_degree"] < 0.05 && c_s1z !== c_s2z)) { //3点
+		if (Math.abs(c_s1z) <= Math.abs(c_s2z)) {
+			c_xy.push({"curve": false, "x": c_s2z * c_z["xy"][2]["x"][0] + c_s2z * c_z["xy"][2]["x"][1] + c_z["xy"][2]["x"][2], "y": c_s2z * c_z["xy"][2]["y"][0] + c_s2z * c_z["xy"][2]["y"][1] + c_z["xy"][2]["y"][2]});
+		} else {
+			c_xy.push({"curve": false, "x": c_s1z * c_z["xy"][0]["x"][0] + c_s1z * c_z["xy"][0]["x"][1] + c_z["xy"][0]["x"][2], "y": c_s1z * c_z["xy"][0]["y"][0] + c_s1z * c_z["xy"][0]["y"][1] + c_z["xy"][0]["y"][2]});
+		}
+		c_s1["et"] = 1;
+		c_s2["st"] = 0;
+	} else if (c_z["parallel"] === false && a_settings["curve"] === true && c_s1["et"] > 1 && c_s2["st"] < 0) { //3点、曲線
 		c_xy.push({"curve": false, "x": c_s1z * c_z["xy"][0]["x"][0] + c_s2z * c_z["xy"][0]["x"][1] + c_z["xy"][0]["x"][2], "y": c_s1z * c_z["xy"][0]["y"][0] + c_s2z * c_z["xy"][0]["y"][1] + c_z["xy"][0]["y"][2]});
 		c_xy.push({"curve": true, "x": c_s1z * c_z["xy"][1]["x"][0] + c_s2z * c_z["xy"][1]["x"][1] + c_z["xy"][1]["x"][2], "y": c_s1z * c_z["xy"][1]["y"][0] + c_s2z * c_z["xy"][1]["y"][1] + c_z["xy"][1]["y"][2]});
 		c_xy.push({"curve": false, "x": c_s1z * c_z["xy"][2]["x"][0] + c_s2z * c_z["xy"][2]["x"][1] + c_z["xy"][2]["x"][2], "y": c_s1z * c_z["xy"][2]["y"][0] + c_s2z * c_z["xy"][2]["y"][1] + c_z["xy"][2]["y"][2]});
@@ -271,9 +249,9 @@ function f_offset(a_1, a_2) { //左手系に注意
 	
 	//d1tはずらし幅z1、z2のとき、z1 * d1t[0] + z2 * d1t[1] + d1t[2]の値
 	
-	if (Math.abs(c_xyxynn) <= 0.02) { //平行に近い
-		return {"parallel": true, "d1t": [0, 0, 1], "d2t": [0, 0, 0], "xy": [{"x": [c_v1yn, 0, c_p2x], "y": [c_v1xn, 0, c_p2y]}, {"x": [c_v1yn * 0.5, c_v2yn * 0.5, (c_p2x + c_p3x) * 0.5], "y": [c_v1xn * 0.5, c_v2xn * 0.5, (c_p2y + c_p3y) * 0.5]}, {"x": [0, c_v2yn, c_p3x], "y": [0, c_v2xn, c_p3y]}]}; //本来
-		//return {"parallel": true, "d1t": [1 / c_v1n, -1 / c_v1n, 1], "d2t": [1 / c_v2n, -1 / c_v2n, 0], "xy": [{"x": [c_v1yn + c_v1xn, -1 * c_v1xn, c_p2x], "y": [c_v1xn + c_v1yn, -1 * c_v1yn, c_p2y]}, {"x": [(c_v1yn + c_v1xn + c_v2xn) * 0.5, (c_v2yn - c_v1xn - c_v2xn) * 0.5, (c_p2x + c_p3x) * 0.5], "y": [(c_v1xn + c_v1yn + c_v2yn) * 0.5, (c_v2xn - c_v1yn - c_v2yn) * 0.5, (c_p2y + c_p3y) * 0.5]}, {"x": [c_v2xn, c_v2yn - c_v2xn, c_p3x], "y": [c_v2yn, c_v2xn - c_v2yn, c_p3y]}]}; //改良？に失敗
+	let l_parallel_tf = false;
+	if (Math.abs(c_xyxynn) <= 0.02) {
+		l_parallel_tf = true;
 	}
 	
 	
@@ -282,7 +260,7 @@ function f_offset(a_1, a_2) { //左手系に注意
 	//p2とp3が同じで、オフセット幅が同じなら1点で曲げたいが、場合分けを省略
 	//p2とp3が同じ場合、場合分けを省略
 	
-	return {"parallel": false, "d1t": [(-1) * c_yxyx * c_xxyy / c_v1n, c_yxyx * c_v2n, 1 + l_d1t], "d2t": [(-1) * c_yxyx * c_v1n, c_yxyx * c_xxyy / c_v2n, l_d2t], "xy": [{"x": [c_v1yn, 0, c_p2x], "y": [c_v1xn, 0, c_p2y]}, {"x": [(-1) * c_v1n * c_v2x * c_yxyx, c_v2n * c_v1x * c_yxyx, c_pcx], "y": [(-1) * c_v1n * c_v2y * c_yxyx, c_v2n * c_v1y * c_yxyx, c_pcy]}, {"x": [0, c_v2yn, c_p3x], "y": [0, c_v2xn, c_p3y]}]};
+	return {"parallel_degree": Math.abs(c_xyxynn), "parallel": l_parallel_tf, "d1t": [(-1) * c_yxyx * c_xxyy / c_v1n, c_yxyx * c_v2n, 1 + l_d1t], "d2t": [(-1) * c_yxyx * c_v1n, c_yxyx * c_xxyy / c_v2n, l_d2t], "xy": [{"x": [c_v1yn, 0, c_p2x], "y": [c_v1xn, 0, c_p2y]}, {"x": [(-1) * c_v1n * c_v2x * c_yxyx, c_v2n * c_v1x * c_yxyx, c_pcx], "y": [(-1) * c_v1n * c_v2y * c_yxyx, c_v2n * c_v1y * c_yxyx, c_pcy]}, {"x": [0, c_v2yn, c_p3x], "y": [0, c_v2xn, c_p3y]}]};
 }
 
 
