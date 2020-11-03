@@ -21,7 +21,7 @@ export type Config = {
     /**
      * @property GTFS-RTの読込を行うかどうか
      */
-    rt: false,
+    rt: boolean,
 
     /**
      * @property データのURL文字列
@@ -53,7 +53,7 @@ export type Config = {
      * @property ？？？？？？？？？？
      */
     change: boolean,
-    
+
     /**
      * @property ？？？？？？？？？？
      */
@@ -64,7 +64,7 @@ export type Config = {
      * @default {lat:35,lon:135}
      */
     set_view_latlon: null | LatLon,
-    
+
     /**
      * @property Leafletの初期表示位置のズームレベル（16）
      * @default 16
@@ -134,23 +134,21 @@ export type Config = {
     background_map: boolean,
 
     background_layers: [
-        [
+        /**
+         * 地図タイルのURL
+         */
+        string,
+        {
             /**
-             * 地図タイルのURL
+             * 著作権表記のhtml
              */
-            string,
-            {
-                /**
-                 * 著作権表記のhtml
-                 */
-                attribution: string,
-                /**
-                 * 透過率
-                 */
-                opacity: 0.25
-            }
-        ]
-    ],
+            attribution: string,
+            /**
+             * 透過率
+             */
+            opacity: number
+        }
+    ][],
     /**
      * @property 停留所名のフォントサイズ
      */
@@ -160,7 +158,7 @@ export type Config = {
      * @property 停留所名のフォント
      * @description 二重のクオーテーションマークに注意
      */
-    font_family: string, 
+    font_family: string,
     /**
      * @description  //横書き（horizontal-tb）か縦書き（vertical-rl）か
      */
@@ -224,7 +222,22 @@ export type Config = {
     round: boolean
 };
 
-const config :Config = {
+// 背景設定だけ既定値を切り出し
+const bglayers: [string, {
+    attribution: string,
+    opacity: number
+}][] =[[
+    "https://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png",
+    {
+        attribution: '<a href=\"https://maps.gsi.go.jp/development/ichiran.html\">地理院タイル</a>',
+        opacity: 0.25
+    }
+]];
+
+/**
+ * 既定値の指定
+ */
+const defaultConfig: Config = {
     "cors_url": "",//CORSの問題を回避するため、間にサーバーサイドのプログラムを挟む場合に前に加えるURL
     "rt": false,//GTFS-RTの読込
     "data": "data",//データのURL
@@ -241,7 +254,7 @@ const config :Config = {
     "direction": true,
     "parent_route_id": "route_id",
     "stop_name": true,
-    "stop_name_overlap":true,
+    "stop_name_overlap": true,
     "zoom_level": 16,
     "svg_zoom_level": 16, //互換性のため残す
     "cut_zoom_level": 16, //f_cut_shape_segments用
@@ -249,13 +262,7 @@ const config :Config = {
     "min_zoom_level": 12, //オフセットする最小ズームレベル
     "max_zoom_level": 16, //オフセットする最小ズームレベル
     "background_map": true,
-    "background_layers": [[
-        "https://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png",
-        {
-            attribution: "<a href=\"https://maps.gsi.go.jp/development/ichiran.html\">地理院タイル</a>",
-            opacity: 0.25
-        }
-    ]],
+    "background_layers": bglayers,
     "font_size": 16, //停留所名のフォントサイズ
     "font_family": "'源ノ角ゴシック'", //停留所名のフォント、二重のクオーテーションマークに注意
     "writing_mode": "horizontal-tb", //横書き（horizontal-tb）か縦書き（vertical-rl）か
@@ -270,7 +277,8 @@ const config :Config = {
     "min_width": 4, //線の最小幅
     "max_width": 8, //線の最大幅
     "round": true //, //角を丸める
-};
+} as const;
+
 export {
-    config
+    defaultConfig
 }
