@@ -50,12 +50,12 @@ export type Config = {
     global?: boolean,
 
     /**
-     * @property ？？？？？？？？？？
+     * @property trueの場合、設定を変更する
      */
     change?: boolean,
 
     /**
-     * @property ？？？？？？？？？？
+     * @property trueの場合、使用
      */
     leaflet?: boolean,
 
@@ -82,27 +82,27 @@ export type Config = {
     timetable?: boolean,
 
     /**
-     * @property ？？？？？？？？？？
+     * @property trueの場合、上り下りを分けて描画する
      */
     direction?: boolean,
 
     /**
-     * 
+     * まとめる単位
      */
     parent_route_id?: string,
 
     /**
-     * 
+     * trueの場合、表示する
      */
     stop_name?: boolean,
 
     /**
-     * 
+     * trueの場合、重なりを許容する
      */
     stop_name_overlap?: boolean,
 
     /**
-     * 
+     * 途中計算で使うズームレベル。なんでもよいが16にしておく。
      */
     zoom_level?: ZoomLevel,
     /**
@@ -121,6 +121,8 @@ export type Config = {
     svg_zoom_ratio?: number,
     /**
      * オフセットする最小ズームレベル
+     * @description SVG出力時のズームレベル。表示される相対的なオフセット幅や文字サイズに影響する。
+     * 1614は可変。拡大縮小のscaleはここを使う。
      */
     min_zoom_level?: ZoomLevel,
 
@@ -130,7 +132,7 @@ export type Config = {
     max_zoom_level?: ZoomLevel,
 
     /**
-     * @property 背景地図を表示するかどうか
+     * @property 背景地図を表示するかどうか。trueの場合、表示する
      */
     background_map?: boolean,
 
@@ -211,7 +213,7 @@ export type Config = {
     min_space_width?: number,
 
     /**
-     * 線の最小幅
+     * 線の最小幅。単位はpx
      */
     min_width?: number,
 
