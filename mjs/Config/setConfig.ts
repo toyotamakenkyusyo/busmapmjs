@@ -1,4 +1,4 @@
-import { Config,defaultConfig } from "./config";
+import { Config, defaultConfig } from "./config";
 
 /**
  * @method setConfig ユーザー設定と設定既定値をマージする
@@ -6,7 +6,7 @@ import { Config,defaultConfig } from "./config";
  * @returns {Config} マージ済み既定値
  * @description もしユーザーが一部しか設定を記載しなくても、他の値は既定値で埋める
  */
-const setConfig = (userConfig: Config):Config => {
+const setConfig = (userConfig: Config): Config => {
 
     // 既定値をもとに、ユーザー指定でそのまま上書き
     // 新たな設定オブジェクトを作る
@@ -14,8 +14,8 @@ const setConfig = (userConfig: Config):Config => {
         {},
         defaultConfig,
         userConfig
-    )
-    
+    );
+
     // マージした設定オブジェクトを返す
     return newConfig;
 }
