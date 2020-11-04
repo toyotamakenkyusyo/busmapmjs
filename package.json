@@ -1,0 +1,22 @@
+{
+  "name": "busmapmjs",
+  "version": "1.0.0",
+  "description": "これは、GTFS等からバスマップを作るJavaScriptです。",
+  "main": "",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/toyotamakenkyusyo/busmapmjs.git"
+  },
+  "author": "豐多摩研究所",
+  "license": "CC0",
+  "bugs": {
+    "url": "https://github.com/toyotamakenkyusyo/busmapmjs/issues"
+  },
+  "homepage": "https://github.com/toyotamakenkyusyo/busmapmjs"
+}
