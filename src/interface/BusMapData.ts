@@ -6,7 +6,7 @@ interface BusMapData {
     /**
      * GTFS-RTのバイナリ変換後そのままのデータ
      */
-    rt: any;
+    rt?: any;
 
     /**
      * Stop配列
