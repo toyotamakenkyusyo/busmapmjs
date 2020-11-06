@@ -49,6 +49,11 @@ export function f_prepare_json(a_data) {
 	}
 	
 	//trip_number関係（一部データとの互換性）
+	//前に作った一部のJSONデータで、数字0と1を""でくくるのが面倒くさくて、数値のままにしていた
+	//しかし、busmapjsでは"0"と"1"の文字列で処理しているので、型を変換している。
+	//それがa_data["calendar"][i1]["monday"]とか
+	//syndayとsondayはその元のJSONの誤字を直すのが面倒なので、ここでそろえている
+	//と思われるが、正確に覚えていない
 	for (let i1 = 0; i1 < a_data["calendar"].length; i1++) {
 		a_data["calendar"][i1]["monday"] = String(a_data["calendar"][i1]["monday"]);
 		a_data["calendar"][i1]["tuesday"] = String(a_data["calendar"][i1]["tuesday"]);
