@@ -1,6 +1,6 @@
 import { UrRoute } from "./UrRoute";
 import { UrStop } from "./UrStop"
-import { Stop, StopTime, Trip } from "@come25136/gtfs";
+import { Shape, Stop, StopTime, Trip } from "@come25136/gtfs";
 
 interface BusMapData {
     /**
@@ -46,6 +46,11 @@ interface BusMapData {
      * StopTimes配列
      */
     stopTimes: Array<StopTime>;
+
+    /**
+     * shape配列
+     */
+    shapes: Array<Shape>;
 }
 
 // l_bmd→c_bmdに変わる場面がある
