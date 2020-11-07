@@ -31,6 +31,7 @@ interface BusMapData {
     urRoutes: Array<UrRoute>;
 
     // calendarの使いみちわかる方補足お願いします
+    // calendarは曜日ごとの運行本数を数えるのにf_count_trip_number.mjsで使う
 
     /**
      * ？？？？？？？？？？

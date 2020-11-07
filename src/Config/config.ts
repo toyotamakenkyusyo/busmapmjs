@@ -33,7 +33,7 @@ export type Config = {
     data_type?: SourceType,
 
     /**
-     * @property ？？？？？？？？？？
+     * @property 同じページに複数のbusmapmjsを開くときに区別するためのid
      */
     busmapjs_id?: string,
 
