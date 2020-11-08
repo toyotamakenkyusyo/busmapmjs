@@ -5,6 +5,7 @@ import { Config } from "../Config/config";
 import { BusMapData } from "../interface/BusMapData";
 import { UrRoute } from "../interface/UrRoute";
 import { UrStop } from "../interface/UrStop";
+import setRouteColor from "../supportLogics/setRouteColor";
 import { setTmpShapeId } from "../supportLogics/setTmpShapeId";
 import { getZipPromise } from "./fetch";
 
@@ -45,28 +46,28 @@ const makeBmdFromGtfs = async (config: Config): Promise<BusMapData> => {
     const gtfs = await getGtfsFromWebZip(url);
 
     // プロパティを抽出(後で省略記法を使える用)
-    let trips = gtfs.trips;
-    let shapes = gtfs.shapes;
-    let stopTimes = gtfs.stopTimes;
-    let stops = gtfs.stops;
+    const stops = gtfs.stops;
 
-    // tripsの検証を行い、shapeIdがない場合は仮の名前を補完する
-    trips = setTmpShapeId(trips);
-
-    // shapesを作る(未定義、makeShape相当)
-    // @ts-ignore
-    shapes = setShape(
-        shapes,
-        trips,
-        gtfs.routes,
-        stopTimes
-    ) as Array<Shape>;
+    // setcolorによって色を補充する
+    const routes = setRouteColor(gtfs.routes);
 
     //stop_timesのpickup_type,drop_off_typeを埋める(未定義)
     // @ts-ignore
-    stopTimes = setStopType(
-        stopTimes
+    const stopTimes = setStopType(
+        gtfs.stopTimes
     );
+
+    // tripsの検証を行い、shapeIdがない場合は仮の名前を補完する
+    const trips = setTmpShapeId(gtfs.trips);
+
+    // shapesを作る(未定義、makeShape相当)
+    // @ts-ignore
+    const shapes = setShape(
+        gtfs.shapes,
+        trips,
+        routes,
+        stopTimes
+    ) as Array<Shape>;
 
     // "route_sort_order"の設定は省略、おそらく不要
     // 数値への変換もおそらく不要(getGtfsFromWebZipでやっているはず)
@@ -74,10 +75,10 @@ const makeBmdFromGtfs = async (config: Config): Promise<BusMapData> => {
     // urRoutes作成(未定義、make_ur_routes相当)
     // @ts-ignore
     const urRoutes: Array<UrRoute> = makeUrRoutes({
-        trips: trips,
-        stopTimes: stopTimes,
-        routes: gtfs.routes,
-        shapes: shapes
+        trips,
+        stopTimes,
+        routes,
+        shapes
     });
 
     // makeUrStopsとmakeParentStationをここで追加する
