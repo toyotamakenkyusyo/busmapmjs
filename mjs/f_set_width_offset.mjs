@@ -114,10 +114,12 @@ export function f_set_width_offset(a_data, a_lonlat_xy, a_settings) {
 		let l_wp = 0; //width_direction_1
 		let l_wm = 0; //width_direction_-1
 		let l_w = 0; //width
+		let l_count_parent_route = 0;
 		for (let i2 = 0; i2 < c_parent_routes.length; i2++) {
 			if (c_parent_routes[i2]["shape_segments"][i1] === undefined) {
 				continue; //通るur_routeがない
 			}
+			l_count_parent_route += 1;
 			l_op = l_op + l_wp * 0.5 + a_settings["min_space_width"] + c_parent_routes[i2]["shape_segments"][i1]["width_direction_1"] * 0.5;
 			l_om = l_om + l_wm * 0.5 + a_settings["min_space_width"] + c_parent_routes[i2]["shape_segments"][i1]["width_direction_-1"] * 0.5;
 			l_o = l_o + l_w * 0.5 + a_settings["min_space_width"] + c_parent_routes[i2]["shape_segments"][i1]["width"] * 0.5;
@@ -127,6 +129,22 @@ export function f_set_width_offset(a_data, a_lonlat_xy, a_settings) {
 			l_wp = c_parent_routes[i2]["shape_segments"][i1]["width_direction_1"];
 			l_wm = c_parent_routes[i2]["shape_segments"][i1]["width_direction_-1"];
 			l_w = c_parent_routes[i2]["shape_segments"][i1]["width"];
+			c_parent_routes[i2]["shape_segments"][i1]["change"] = 1; //太さ変更用
+		}
+		//8本より多い時には半分にする
+		if (l_count_parent_route > 8) {
+			for (let i2 = 0; i2 < c_parent_routes.length; i2++) {
+				if (c_parent_routes[i2]["shape_segments"][i1] === undefined) {
+					continue; //通るur_routeがない
+				}
+				c_parent_routes[i2]["shape_segments"][i1]["offset_direction_1"] *= 0.5;
+				c_parent_routes[i2]["shape_segments"][i1]["offset_direction_-1"] *= 0.5;
+				c_parent_routes[i2]["shape_segments"][i1]["offset"] *= 0.5;
+				c_parent_routes[i2]["shape_segments"][i1]["width_direction_1"] *= 0.5;
+				c_parent_routes[i2]["shape_segments"][i1]["width_direction_-1"] *= 0.5;
+				c_parent_routes[i2]["shape_segments"][i1]["width"] *= 0.5;
+				c_parent_routes[i2]["shape_segments"][i1]["change"] = 0.5; //太さ変更用
+			}
 		}
 	}
 	
@@ -146,18 +164,18 @@ export function f_set_width_offset(a_data, a_lonlat_xy, a_settings) {
 			let l_offset;
 			if (a_settings["direction"] === true) {
 				if (c_direction === 1) {
-					l_width = c_child_shape_segment["width_direction_1"];
+					l_width = c_child_shape_segment["width_direction_1"] * c_shape_segment["change"];
 					l_offset = c_shape_segment["offset_direction_1"];
 				} else if (c_direction === -1) {
-					l_width = c_child_shape_segment["width_direction_-1"];
+					l_width = c_child_shape_segment["width_direction_-1"] * c_shape_segment["change"];
 					l_offset = c_shape_segment["offset_direction_-1"];
 				}
 			} else {
 				if (c_direction === 1) {
-					l_width = c_child_shape_segment["width"];
+					l_width = c_child_shape_segment["width"] * c_shape_segment["change"];
 					l_offset = c_shape_segment["offset"];
 				} else if (c_direction === -1) {
-					l_width = c_child_shape_segment["width"];
+					l_width = c_child_shape_segment["width"] * c_shape_segment["change"];
 					l_offset = c_shape_segment["offset"] * (-1);
 				}
 			}
