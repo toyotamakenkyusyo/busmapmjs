@@ -2,17 +2,19 @@ export function f_make_ur_routes(a_data) {
 	//trips、stop_times、routes、shapesが必要
 	const c_index = {}; //全体で使う目次
 	for (let i1 = 0; i1 < a_data["trips"].length; i1++) {
-		c_index["trip_id_" + a_data["trips"][i1]["trip_id"]] = a_data["trips"][i1];
+		const name = "trip_id_" + a_data["trips"][i1]["trip_id"]
+		c_index[name] = a_data["trips"][i1];
 	}
 	for (let i1 = 0; i1 < a_data["routes"].length; i1++) {
-		c_index["route_id_" + a_data["routes"][i1]["route_id"]] = a_data["routes"][i1];
+		const name = "route_id_" + a_data["routes"][i1]["route_id"];
+		c_index[name] = a_data["routes"][i1];
 	}
 	for (let i1 = 0; i1 < a_data["routes"].length; i1++) {
 		if (typeof a_data["routes"][i1]["route_sort_order"] !== "number") {
 			a_data["routes"][i1]["route_sort_order"] = i1;
 		}
 	}
-	
+
 
 	for (let i1 = 0; i1 < a_data["trips"].length; i1++) {
 		a_data["trips"][i1]["stop_times"] = [];
@@ -30,7 +32,7 @@ export function f_make_ur_routes(a_data) {
 	for (let i1 = 0; i1 < a_data["trips"].length; i1++) {
 		f_sort(a_data["trips"][i1]["stop_times"], "stop_sequence");
 	}
-	
+
 	//c_shape_index
 	const c_shape_index = {};
 	if (a_data["shapes"] !== undefined) {
@@ -47,7 +49,10 @@ export function f_make_ur_routes(a_data) {
 		}
 		//shapesをtripsにまとめる。
 		for (let i1 = 0; i1 < a_data["trips"].length; i1++) {
-			if (a_data["trips"][i1]["shape_id"] === undefined || a_data["trips"][i1]["shape_id"] === "") {
+			if (
+				a_data["trips"][i1]["shape_id"] === undefined
+				|| a_data["trips"][i1]["shape_id"] === ""
+			) {
 				continue;
 			}
 			const c_shapes = c_shape_index["shape_id_" + a_data["trips"][i1]["shape_id"]];
@@ -60,7 +65,7 @@ export function f_make_ur_routes(a_data) {
 			}
 		}
 	}
-	
+
 	//ur_routesをつくる
 	a_data["ur_routes"] = [];
 	for (let i1 = 0; i1 < a_data["trips"].length; i1++) {
@@ -69,20 +74,35 @@ export function f_make_ur_routes(a_data) {
 		let l_exist = false; //違うと仮定
 		for (let i2 = 0; i2 < a_data["ur_routes"].length; i2++) {
 			const c_ur_route = a_data["ur_routes"][i2];
-			if (c_ur_route["route_id"] !== c_trip["route_id"] || c_ur_route["stop_array"].length !== c_trip["stop_times"].length || c_ur_route["shape_pt_array"].length !== c_trip["shapes"].length) {
-				
-				
+			if (c_ur_route["route_id"] !== c_trip["route_id"]
+				|| c_ur_route["stop_array"].length !== c_trip["stop_times"].length
+				|| c_ur_route["shape_pt_array"].length !== c_trip["shapes"].length) {
+
+
 				continue; //違う
 			}
 			l_exist = true; //同じと仮定
 			for (let i3 = 0; i3 < c_ur_route["stop_array"].length; i3++) {
-				if(c_ur_route["stop_array"][i3]["stop_id"] !== c_trip["stop_times"][i3]["stop_id"] || c_ur_route["stop_array"][i3]["pickup_type"] !== c_trip["stop_times"][i3]["pickup_type"] || c_ur_route["stop_array"][i3]["drop_off_type"] !== c_trip["stop_times"][i3]["drop_off_type"]) {
+				const urId = c_ur_route["stop_array"][i3]["stop_id"];
+				const urPickType = c_ur_route["stop_array"][i3]["pickup_type"];
+				const urDropOffType = c_ur_route["stop_array"][i3]["drop_off_type"];
+
+				const tripId = c_trip["stop_times"][i3]["stop_id"];
+				const tripPickType = c_trip["stop_times"][i3]["pickup_type"];
+				const tripDropOffType = c_trip["stop_times"][i3]["drop_off_type"];
+				if (urId !== tripId
+					|| urPickType !== tripPickType
+					|| urDropOffType !== tripDropOffType) {
 					l_exist = false; //違う
 					break;
 				}
 			}
 			for (let i3 = 0; i3 < c_ur_route["shape_pt_array"].length; i3++) {
-				if(c_ur_route["shape_pt_array"][i3]["shape_pt_lat"] !== c_trip["shapes"][i3]["shape_pt_lat"] || c_ur_route["shape_pt_array"][i3]["shape_pt_lon"] !== c_trip["shapes"][i3]["shape_pt_lon"]) {
+				const urLat = c_ur_route["shape_pt_array"][i3]["shape_pt_lat"];
+				const urLon = c_ur_route["shape_pt_array"][i3]["shape_pt_lon"];
+				const tripLat = c_trip["shapes"][i3]["shape_pt_lat"];
+				const tripLon = c_trip["shapes"][i3]["shape_pt_lon"];
+				if (urLat !== tripLat || urLon !== tripLon) {
 					l_exist = false; //違う
 					break;
 				}
@@ -91,7 +111,10 @@ export function f_make_ur_routes(a_data) {
 				c_trip["ur_route_id"] = c_ur_route["ur_route_id"];
 				let l_exist_2 = false;
 				for (let i3 = 0; i3 < c_ur_route["service_array"].length; i3++) {
-					if (c_ur_route["service_array"][i3]["service_id"] === c_trip["service_id"]) {
+					const urRouteServiceId = c_ur_route["service_array"][i3]["service_id"];
+					const tripServiceId = c_trip["service_id"];
+					const isSameServiceId = urRouteServiceId === tripServiceId;
+					if (isSameServiceId) {
 						c_ur_route["service_array"][i3]["number"] += 1;
 						l_exist_2 = true;
 					}
@@ -108,7 +131,17 @@ export function f_make_ur_routes(a_data) {
 		if (l_exist === false) { //見つからないとき
 			const c_ur_route_id = "ur_route_id_" + String(i1);
 			c_trip["ur_route_id"] = c_ur_route_id;
-			const c_ur_route = {"ur_route_id": c_ur_route_id, "stop_array": [], "shape_pt_array": [], "service_array": [{"service_id": c_trip["service_id"], "number": 1}]};
+			const c_ur_route = {
+				"ur_route_id": c_ur_route_id,
+				"stop_array": [],
+				"shape_pt_array": [],
+				"service_array": [
+					{
+						"service_id": c_trip["service_id"],
+						"number": 1
+					}
+				]
+			};
 			for (let i2 in c_index["route_id_" + c_trip["route_id"]]) {
 				c_ur_route[i2] = c_index["route_id_" + c_trip["route_id"]][i2];
 			}
@@ -130,7 +163,7 @@ export function f_make_ur_routes(a_data) {
 	}
 	//並び替え
 	f_sort(a_data["ur_routes"], "route_sort_order");
-	
+
 }
 
 function f_sort(a_array, a_key) {
