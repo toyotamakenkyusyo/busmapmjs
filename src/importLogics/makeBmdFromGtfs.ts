@@ -5,6 +5,7 @@ import { Config } from "../Config/config";
 import { BusMapData } from "../interface/BusMapData";
 import { UrRoute } from "../interface/UrRoute";
 import { UrStop } from "../interface/UrStop";
+import { makeUrRoutes } from "../supportLogics/makeUrRoutes";
 import setRouteColor from "../supportLogics/setRouteColor";
 import { setTmpShapeId } from "../supportLogics/setTmpShapeId";
 import { getZipPromise } from "./fetch";
@@ -72,8 +73,7 @@ const makeBmdFromGtfs = async (config: Config): Promise<BusMapData> => {
     // "route_sort_order"の設定は省略、おそらく不要
     // 数値への変換もおそらく不要(getGtfsFromWebZipでやっているはず)
 
-    // urRoutes作成(未定義、make_ur_routes相当)
-    // @ts-ignore
+    // urRoutes作成(make_ur_routes相当)
     const urRoutes: Array<UrRoute> = makeUrRoutes({
         trips,
         stopTimes,
