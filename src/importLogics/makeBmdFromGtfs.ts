@@ -5,7 +5,9 @@ import { Config } from "../Config/config";
 import { BusMapData } from "../interface/BusMapData";
 import { UrRoute } from "../interface/UrRoute";
 import { UrStop } from "../interface/UrStop";
+import makeParentStations from "../supportLogics/makeParentStations";
 import { makeUrRoutes } from "../supportLogics/makeUrRoutes";
+import makeUrStops from "../supportLogics/makeUrStops";
 import setRouteColor from "../supportLogics/setRouteColor";
 import { setTmpShapeId } from "../supportLogics/setTmpShapeId";
 import { getZipPromise } from "./fetch";
@@ -84,13 +86,14 @@ const makeBmdFromGtfs = async (config: Config): Promise<BusMapData> => {
     // makeUrStopsとmakeParentStationをここで追加する
     // 本家ではzipとjsonの処理が合流した後に行っていたが、あえてここで実施
 
-    // stopsから、まずurStopsを生成(未定義)
-    // @ts-ignore
+    // stopsから、まずurStopsを生成
     const urStops: Array<UrStop> = makeUrStops(stops);
 
-    // urStopsとgtfs.stopsを元に、parentStationsを作成(未定義)
-    // @ts-ignore
-    const parentStations: Array<Stop> = makeParentStations(urStops,stops);
+    // urStopsとgtfs.stopsを元に、parentStationsを作成
+    const parentStations: Array<Stop> = makeParentStations(
+        urStops,
+        stops
+    );
 
     // 補完などした各データからBusMapDataとして1つにまとめ、返す
     // プロパティ名と変数名が同じ場合、省略記法が使える
@@ -102,7 +105,7 @@ const makeBmdFromGtfs = async (config: Config): Promise<BusMapData> => {
         stopTimes,
         stops,
         trips,
-        calendar:["何が格納されるかわかってないから後で書き直す"]
+        calendar: ["何が格納されるかわかってないから後で書き直す"]
     }
 }
 
