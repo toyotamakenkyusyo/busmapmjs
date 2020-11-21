@@ -19,7 +19,8 @@ const makeUrStops = (stops: Stop[]):UrStop[] => {
             ur_stop_id: stop.id,
             lat: stop.location.lat,
             lon: stop.location.lon,
-            name:stop.name
+            name: stop.name,
+            parentStation:stop.parentStation
         }
     });
     return urStops;

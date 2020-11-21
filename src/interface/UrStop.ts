@@ -10,6 +10,7 @@ export type UrStop = {
     ur_stop_id: Stop["id"],
     lat: Location["lat"],
     lon: Location["lon"],
-    name:Stop["name"]
+    name: Stop["name"],
+    parentStation:Stop["parentStation"]
 }
 
