@@ -50,7 +50,11 @@ export function f_make_parent_stations(a_data) {
 		const c_ur_stop = a_data["ur_stops"][i1];
 		const c_parent_station = c_ur_stop["parent_station"];
 		if (c_parent_station_list[c_parent_station] === undefined) {
-			c_parent_station_list[c_parent_station] = {"stop_lat": 0, "stop_lon": 0, "children_number" : 0};
+			c_parent_station_list[c_parent_station] = {
+				"stop_lat": 0,
+				"stop_lon": 0,
+				"children_number": 0
+			};
 		}
 		c_parent_station_list[c_parent_station]["stop_lat"] += c_ur_stop["stop_lat"];
 		c_parent_station_list[c_parent_station]["stop_lon"] += c_ur_stop["stop_lon"];

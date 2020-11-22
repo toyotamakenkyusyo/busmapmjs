@@ -118,19 +118,28 @@ export function f_make_shape_segments(a_data, a_lonlat_xy, a_settings) {
 				const c_seid = "shape_segment_" + l_sid + "_" + l_eid;
 				const c_esid = "shape_segment_" + l_eid + "_" + l_sid;
 				if (c_shape_segments[c_seid] !== undefined) { //正向きがある
-					c_new_shape_segment_array.push({"id": c_seid, "direction": 1});
+					c_new_shape_segment_array.push({
+						"id": c_seid,
+						"direction": 1
+					});
 					c_delete_shape_points[l_mid] = true;
 					c_delete_shape_segments[c_s1id] = true;
 					c_delete_shape_segments[c_s2id] = true;
 					l_exist = true;
 				} else if (c_shape_segments[c_esid] !== undefined) { //逆向きがある
-					c_new_shape_segment_array.push({"id": c_esid, "direction": -1});
+					c_new_shape_segment_array.push({
+						"id": c_esid,
+						"direction": -1
+					});
 					c_delete_shape_points[l_mid] = true;
 					c_delete_shape_segments[c_s1id] = true;
 					c_delete_shape_segments[c_s2id] = true;
 					l_exist = true;
 				} else { //どちらもない
-					c_new_shape_segment_array.push({"id": c_shape_segment_arrays[i1][i2]["id"], "direction": c_shape_segment_arrays[i1][i2]["direction"]});
+					c_new_shape_segment_array.push({
+						"id": c_shape_segment_arrays[i1][i2]["id"],
+						"direction": c_shape_segment_arrays[i1][i2]["direction"]
+					});
 				}
 			}
 			c_shape_segment_arrays[i1] = c_new_shape_segment_array;
@@ -253,8 +262,12 @@ export function f_make_shape_segments(a_data, a_lonlat_xy, a_settings) {
 	for (let i1 in c_shape_segments) {
 		const c_sid = c_shape_segments[i1]["sid"];
 		const c_eid = c_shape_segments[i1]["eid"];
-		const c_x = Math.floor((c_shape_points[c_sid]["x"] + c_shape_points[c_eid]["x"]) * 0.5);
-		const c_y = Math.floor((c_shape_points[c_sid]["y"] + c_shape_points[c_eid]["y"]) * 0.5);
+		const c_x = Math.floor((
+			c_shape_points[c_sid]["x"] + c_shape_points[c_eid]["x"]) * 0.5
+		);
+		const c_y = Math.floor((
+			c_shape_points[c_sid]["y"] + c_shape_points[c_eid]["y"]) * 0.5
+		);
 		const c_tile = "tile_" + String(c_x) + "_" + String(c_y);
 		if (c_shape_segments_index[c_tile] === undefined) {
 			c_shape_segments_index[c_tile] = {};
@@ -286,7 +299,14 @@ export function f_make_shape_segments(a_data, a_lonlat_xy, a_settings) {
 					const c_sy = c_shape_points[c_sid]["y"];
 					const c_ex = c_shape_points[c_eid]["x"];
 					const c_ey = c_shape_points[c_eid]["y"];
-					const c_distance = f_distance(c_stop_x, c_stop_y, c_sx, c_sy, c_ex, c_ey);
+					const c_distance = f_distance(
+						c_stop_x,
+						c_stop_y,
+						c_sx,
+						c_sy,
+						c_ex,
+						c_ey
+					);
 					if (c_distance < l_nearest_distance) {
 						l_nearest_distance = c_distance;
 						l_nearest_shape_segment_id = i4;
@@ -297,7 +317,10 @@ export function f_make_shape_segments(a_data, a_lonlat_xy, a_settings) {
 		//ここまでで最寄りsegmentが見つかった
 		//もし見つからなかったら？
 		if (l_nearest_shape_segment_id === undefined) {
-			console.log(String(i1) + "の" + a_data["stops"][i1]["stop_name"] + "は最寄segment未発見、例外処置未完成");
+			console.log(
+				String(i1) + "の" + a_data["stops"][i1]["stop_name"]
+				+ "は最寄segment未発見、例外処置未完成"
+			);
 			//例外処置が必要
 			continue;
 		}
@@ -333,7 +356,8 @@ export function f_make_shape_segments(a_data, a_lonlat_xy, a_settings) {
 			const c_t = c_tt / c_r2;
 			const c_x = c_sx + c_t * c_vx;
 			const c_y = c_sy + c_t * c_vy;
-			const c_nearest_shape_pt_id = l_nearest_shape_segment_id + "_ratio_" + String(c_t); //ur_stopに対応する点のid
+						//ur_stopに対応する点のid
+			const c_nearest_shape_pt_id = l_nearest_shape_segment_id + "_ratio_" + String(c_t);
 			c_ur_stops[i1]["shape_pt_id"] = c_nearest_shape_pt_id; //c_ur_stopsに加える
 			c_ur_stops[i1]["shape_pt_x"] = c_x;
 			c_ur_stops[i1]["shape_pt_y"] = c_y;
@@ -351,12 +375,15 @@ export function f_make_shape_segments(a_data, a_lonlat_xy, a_settings) {
 					"near_stops": []//, //最寄りのur_stopのstop_id
 				};
 			}
-			c_shape_points[c_nearest_shape_pt_id]["near_stops"].push(c_ur_stops[i1]["stop_id"]); //c_shape_pointsに加える
+			c_shape_points[c_nearest_shape_pt_id]["near_stops"].push(
+				c_ur_stops[i1]["stop_id"]
+			); //c_shape_pointsに加える
 			//c_shape_segmentsに加える
 			c_shape_segments[l_nearest_shape_segment_id]["stops_exist"] = true;
 			let l_exist = false;
-			for (let i2 = 0; i2 < c_shape_segments[l_nearest_shape_segment_id]["near_stops"].length; i2++) {
-				if (c_shape_segments[l_nearest_shape_segment_id]["near_stops"][i2]["id"] === c_nearest_shape_pt_id) {
+			const seg = c_shape_segments[l_nearest_shape_segment_id];
+			for (let i2 = 0; i2 < seg["near_stops"].length; i2++) {
+				if (seg["near_stops"][i2]["id"] === c_nearest_shape_pt_id) {
 					l_exist = true;
 					break;
 				}
@@ -409,9 +436,13 @@ export function f_make_shape_segments(a_data, a_lonlat_xy, a_settings) {
 		c_child_shape_pt_arrays.push([]);
 		//最初の1つ
 		if (c_shape_segment_arrays[i1][0]["direction"] === 1) {
-			c_child_shape_pt_arrays[i1].push(c_shape_segments[c_shape_segment_arrays[i1][0]["id"]]["sid"]);
+			c_child_shape_pt_arrays[i1].push(
+				c_shape_segments[c_shape_segment_arrays[i1][0]["id"]]["sid"]
+			);
 		} else if (c_shape_segment_arrays[i1][0]["direction"] === -1) {
-			c_child_shape_pt_arrays[i1].push(c_shape_segments[c_shape_segment_arrays[i1][0]["id"]]["eid"]);
+			c_child_shape_pt_arrays[i1].push(
+				c_shape_segments[c_shape_segment_arrays[i1][0]["id"]]["eid"]
+			);
 		}
 		//2つめから
 		for (let i2 = 0; i2 < c_shape_segment_arrays[i1].length; i2++) {
@@ -419,21 +450,31 @@ export function f_make_shape_segments(a_data, a_lonlat_xy, a_settings) {
 			if (c_shape_segment_arrays[i1][i2]["direction"] === 1) {
 				for (let i3 = 0; i3 < c_shape_segment["near_stops"].length; i3++) {
 					if (i3 >= 1) {
-						if(c_shape_segment["near_stops"][i3 - 1]["id"] === c_shape_segment["near_stops"][i3]["id"]) {
+						if (
+							c_shape_segment["near_stops"][i3 - 1]["id"]
+							=== c_shape_segment["near_stops"][i3]["id"]
+						) {
 							continue; //同じ位置は重複させない
 						}
 					}
-					c_child_shape_pt_arrays[i1].push(c_shape_segment["near_stops"][i3]["id"]);
+					c_child_shape_pt_arrays[i1].push(
+						c_shape_segment["near_stops"][i3]["id"]
+					);
 				}
 				c_child_shape_pt_arrays[i1].push(c_shape_segment["eid"]);
 			} else if (c_shape_segment_arrays[i1][i2]["direction"] === -1) {
 				for (let i3 = c_shape_segment["near_stops"].length - 1; i3 >=0; i3--) {
 					if (i3 <= c_shape_segment["near_stops"].length - 2) {
-						if(c_shape_segment["near_stops"][i3 + 1]["id"] === c_shape_segment["near_stops"][i3]["id"]) {
+						if (
+							c_shape_segment["near_stops"][i3 + 1]["id"]
+							=== c_shape_segment["near_stops"][i3]["id"]
+						) {
 							continue; //同じ位置は重複させない
 						}
 					}
-					c_child_shape_pt_arrays[i1].push(c_shape_segment["near_stops"][i3]["id"]);
+					c_child_shape_pt_arrays[i1].push(
+						c_shape_segment["near_stops"][i3]["id"]
+					);
 				}
 				c_child_shape_pt_arrays[i1].push(c_shape_segment["sid"]);
 			}
