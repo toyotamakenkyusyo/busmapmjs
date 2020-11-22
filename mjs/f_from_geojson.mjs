@@ -20,7 +20,10 @@ export function f_from_geojson(a_geojson) {
 			if (c_feature["geometry"]["type"] === "LineString") { //系統
 				c_feature["properties"]["shape_pt_array"] = [];
 				for (let i2 = 0; i2 < c_feature["geometry"]["coordinates"].length; i2++) {
-					c_feature["properties"]["shape_pt_array"].push({"shape_pt_lon": c_feature["geometry"]["coordinates"][i2][0], "shape_pt_lat": c_feature["geometry"]["coordinates"][i2][1]});
+					c_feature["properties"]["shape_pt_array"].push({
+						"shape_pt_lon": c_feature["geometry"]["coordinates"][i2][0],
+						"shape_pt_lat": c_feature["geometry"]["coordinates"][i2][1]
+					});
 				}
 			}
 		}
@@ -40,24 +43,52 @@ export function f_from_geojson(a_geojson) {
 				for (let i3 = 0; i3 < a_geojson["features"].length; i3++) {
 					const c_feature = a_geojson["features"][i3];
 					if (c_feature["geometry"]["type"] === "LineString") {
-						if (c_feature["properties"]["start_point"] === c_route["arcs"][i2] && c_feature["properties"]["end_point"] === c_route["arcs"][i2 + 1]) {
+						if (
+							c_feature["properties"]["start_point"] === c_route["arcs"][i2]
+							&& c_feature["properties"]["end_point"] === c_route["arcs"][i2 + 1]
+						) {
 							for (let i4 = 0; i4 < c_feature["geometry"]["coordinates"].length; i4++) {
 								if (c_route["shape_pt_array"].length > 0 && i4 === 0) {
-									if (c_route["shape_pt_array"][c_route["shape_pt_array"].length - 1]["shape_pt_lon"] === c_feature["geometry"]["coordinates"][0][0] && c_route["shape_pt_array"][c_route["shape_pt_array"].length - 1]["shape_pt_lat"] === c_feature["geometry"]["coordinates"][0][1]) {
+									if (
+										c_route["shape_pt_array"][c_route["shape_pt_array"].length - 1]["shape_pt_lon"]
+										=== c_feature["geometry"]["coordinates"][0][0]
+										&& c_route["shape_pt_array"][c_route["shape_pt_array"].length - 1]["shape_pt_lat"]
+										=== c_feature["geometry"]["coordinates"][0][1]
+									) {
 										continue;
 									}
 								}
-								c_route["shape_pt_array"].push({"shape_pt_lon": c_feature["geometry"]["coordinates"][i4][0], "shape_pt_lat": c_feature["geometry"]["coordinates"][i4][1]});
+								c_route["shape_pt_array"].push({
+									"shape_pt_lon": c_feature["geometry"]["coordinates"][i4][0],
+									"shape_pt_lat": c_feature["geometry"]["coordinates"][i4][1]
+								});
 							}
 							break;
-						} else if (c_feature["properties"]["end_point"] === c_route["arcs"][i2] && c_feature["properties"]["start_point"] === c_route["arcs"][i2 + 1]) {
+						} else if (
+							c_feature["properties"]["end_point"] === c_route["arcs"][i2]
+							&& c_feature["properties"]["start_point"] === c_route["arcs"][i2 + 1]
+						) {
 							for (let i4 = c_feature["geometry"]["coordinates"].length - 1; i4 >= 0; i4--) {
-								if (c_route["shape_pt_array"].length > 0 && i4 === c_feature["geometry"]["coordinates"].length - 1) {
-									if (c_route["shape_pt_array"][c_route["shape_pt_array"].length - 1][0] === c_feature["geometry"]["coordinates"][c_feature["geometry"]["coordinates"].length - 1]["shape_pt_lon"] && c_route["shape_pt_array"][c_route["shape_pt_array"].length - 1]["shape_pt_lat"] === c_feature["geometry"]["coordinates"][c_feature["geometry"]["coordinates"].length - 1][1]) {
+								if (
+									c_route["shape_pt_array"].length > 0
+									&& i4 === c_feature["geometry"]["coordinates"].length - 1
+								) {
+									if (
+										c_route["shape_pt_array"][c_route["shape_pt_array"].length - 1][0]
+										=== c_feature["geometry"]["coordinates"][
+										c_feature["geometry"]["coordinates"].length - 1
+										]["shape_pt_lon"]
+										&& c_route["shape_pt_array"][c_route["shape_pt_array"].length - 1]["shape_pt_lat"]
+										=== c_feature["geometry"]["coordinates"][
+										c_feature["geometry"]["coordinates"].length - 1
+										][1]) {
 										continue;
 									}
 								}
-								c_route["shape_pt_array"].push({"shape_pt_lon": c_feature["geometry"]["coordinates"][i4][0], "shape_pt_lat": c_feature["geometry"]["coordinates"][i4][1]});
+								c_route["shape_pt_array"].push({
+									"shape_pt_lon": c_feature["geometry"]["coordinates"][i4][0],
+									"shape_pt_lat": c_feature["geometry"]["coordinates"][i4][1]
+								});
 							}
 							break;
 						}

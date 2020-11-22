@@ -1,5 +1,15 @@
-export function f_search_route(a_start_parent_station, a_end_parent_station, a_bmd, a_parent_station_index) {
-	const c_route_se = f_search_from_start_end(a_start_parent_station, a_end_parent_station, a_bmd, a_parent_station_index);
+export function f_search_route(
+	a_start_parent_station,
+	a_end_parent_station,
+	a_bmd,
+	a_parent_station_index
+) {
+	const c_route_se = f_search_from_start_end(
+		a_start_parent_station,
+		a_end_parent_station,
+		a_bmd,
+		a_parent_station_index
+	);
 	for (let i1 = 0; i1 < c_route_se.length; i1++) {
 		if (c_route_se[i1].length > 0) {
 			break;
@@ -8,8 +18,15 @@ export function f_search_route(a_start_parent_station, a_end_parent_station, a_b
 			const c_mid_parent_station = {}; //始点からも終点からも行ける点
 			const c_mid_parent_station_s = {}; //始点から行ける点
 			const c_mid_parent_station_e = {}; //終点から行ける点
-			const c_route_s = f_search_from_start(a_start_parent_station, a_bmd, a_parent_station_index);
-			const c_route_e = f_search_from_end(a_end_parent_station, a_bmd, a_parent_station_index);
+			const c_route_s = f_search_from_start(
+				a_start_parent_station,
+				a_bmd,
+				a_parent_station_index
+			);
+			const c_route_e = f_search_from_end(
+				a_end_parent_station,
+				a_bmd,
+				a_parent_station_index);
 			for (let i2 = 0; i2 < c_route_s.length; i2++) {
 				for (let i3 in c_route_s[i2]) {
 					c_mid_parent_station_s[i3] = true;
@@ -51,16 +68,26 @@ export function f_search_route(a_start_parent_station, a_end_parent_station, a_b
 
 
 //2点間
-function f_search_from_start_end(a_start_parent_station, a_end_parent_station, a_bmd, a_parent_station_index) {
+function f_search_from_start_end(
+	a_start_parent_station,
+	a_end_parent_station,
+	a_bmd,
+	a_parent_station_index
+) {
 	const c_ur_route_stop_arrays = [];
 	for (let i1 = 0; i1 < a_bmd["ur_routes"].length; i1++) {
 		let l_stop_array = [];
 		let l_start = false;
 		let l_end = false;
 		for (let i2 = 0; i2 < a_bmd["ur_routes"][i1]["stop_array"].length; i2++) {
-			const c_parent_station = a_parent_station_index[a_bmd["ur_routes"][i1]["stop_array"][i2]["stop_id"]];
+			const c_parent_station = a_parent_station_index[
+				a_bmd["ur_routes"][i1]["stop_array"][i2]["stop_id"]
+			];
 			if (l_start === true) {
-				l_stop_array.push(a_bmd["ur_routes"][i1]["stop_array"][i2 - 1]["stop_id"] + "_to_" + a_bmd["ur_routes"][i1]["stop_array"][i2]["stop_id"]);
+				l_stop_array.push(
+					a_bmd["ur_routes"][i1]["stop_array"][i2 - 1]["stop_id"]
+					+ "_to_" + a_bmd["ur_routes"][i1]["stop_array"][i2]["stop_id"]
+				);
 			}
 			if (c_parent_station === a_start_parent_station) {
 				l_stop_array = [];
@@ -89,9 +116,14 @@ function f_search_from_start(a_start_parent_station, a_bmd, a_parent_station_ind
 		let l_stop_array = [];
 		let l_start = false;
 		for (let i2 = 0; i2 < a_bmd["ur_routes"][i1]["stop_array"].length; i2++) {
-			const c_parent_station = a_parent_station_index[a_bmd["ur_routes"][i1]["stop_array"][i2]["stop_id"]];
+			const c_parent_station = a_parent_station_index[
+				a_bmd["ur_routes"][i1]["stop_array"][i2]["stop_id"]
+			];
 			if (l_start === true) {
-				l_stop_array.push(a_bmd["ur_routes"][i1]["stop_array"][i2 - 1]["stop_id"] + "_to_" + a_bmd["ur_routes"][i1]["stop_array"][i2]["stop_id"]);
+				l_stop_array.push(
+					a_bmd["ur_routes"][i1]["stop_array"][i2 - 1]["stop_id"]
+					+ "_to_" + a_bmd["ur_routes"][i1]["stop_array"][i2]["stop_id"]
+				);
 				if (c_ur_route_stop_arrays[i1][c_parent_station] === undefined) {
 					c_ur_route_stop_arrays[i1][c_parent_station] = [];
 					for (let i3 = 0; i3 < l_stop_array.length; i3++) {
@@ -116,9 +148,14 @@ function f_search_from_end(a_end_parent_station, a_bmd, a_parent_station_index) 
 		let l_stop_array = [];
 		let l_end = false;
 		for (let i2 = a_bmd["ur_routes"][i1]["stop_array"].length - 1; i2 >= 0; i2--) {
-			const c_parent_station = a_parent_station_index[a_bmd["ur_routes"][i1]["stop_array"][i2]["stop_id"]];
+			const c_parent_station = a_parent_station_index[
+				a_bmd["ur_routes"][i1]["stop_array"][i2]["stop_id"]
+			];
 			if (l_end === true) {
-				l_stop_array.push(a_bmd["ur_routes"][i1]["stop_array"][i2]["stop_id"] + "_to_" + a_bmd["ur_routes"][i1]["stop_array"][i2 + 1]["stop_id"]);
+				l_stop_array.push(
+					a_bmd["ur_routes"][i1]["stop_array"][i2]["stop_id"]
+					+ "_to_" + a_bmd["ur_routes"][i1]["stop_array"][i2 + 1]["stop_id"]
+				);
 				if (c_ur_route_stop_arrays[i1][c_parent_station] === undefined) {
 					c_ur_route_stop_arrays[i1][c_parent_station] = [];
 					for (let i3 = l_stop_array.length - 1; i3 >= 0; i3--) {

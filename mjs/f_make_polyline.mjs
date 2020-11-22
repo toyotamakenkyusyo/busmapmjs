@@ -2,14 +2,49 @@ export function f_make_polyline(a_child_shape_segment_array) {
 	const c_polyline = [];
 	//最初と最後は3点にならない
 	//widthは終点側に入れる
-	c_polyline.push({"x": a_child_shape_segment_array[0]["sxy"][0]["x"], "y": a_child_shape_segment_array[0]["sxy"][0]["y"], "curve": a_child_shape_segment_array[0]["sxy"][0]["curve"], "original": a_child_shape_segment_array[0]["sm"], "width": null, "ids": a_child_shape_segment_array[0]["sids"]});
+	c_polyline.push({
+		"x": a_child_shape_segment_array[0]["sxy"][0]["x"],
+		"y": a_child_shape_segment_array[0]["sxy"][0]["y"],
+		"curve": a_child_shape_segment_array[0]["sxy"][0]["curve"],
+		"original": a_child_shape_segment_array[0]["sm"],
+		"width": null,
+		"ids": a_child_shape_segment_array[0]["sids"]
+	});
 	for (let i2 = 0; i2 < a_child_shape_segment_array.length; i2++) {
 		if (a_child_shape_segment_array[i2]["exy"].length === 3) {
-			c_polyline.push({"x": a_child_shape_segment_array[i2]["exy"][0]["x"], "y": a_child_shape_segment_array[i2]["exy"][0]["y"], "curve": a_child_shape_segment_array[i2]["exy"][0]["curve"], "original": a_child_shape_segment_array[i2]["em"], "width": a_child_shape_segment_array[i2]["w"], "ids": []});
-			c_polyline.push({"x": a_child_shape_segment_array[i2]["exy"][1]["x"], "y": a_child_shape_segment_array[i2]["exy"][1]["y"], "curve": a_child_shape_segment_array[i2]["exy"][1]["curve"], "original": a_child_shape_segment_array[i2]["em"], "width": a_child_shape_segment_array[i2]["w"], "ids": a_child_shape_segment_array[i2]["eids"]});
-			c_polyline.push({"x": a_child_shape_segment_array[i2]["exy"][2]["x"], "y": a_child_shape_segment_array[i2]["exy"][2]["y"], "curve": a_child_shape_segment_array[i2]["exy"][2]["curve"], "original": a_child_shape_segment_array[i2]["em"], "width": a_child_shape_segment_array[i2 + 1]["w"], "ids": []});
+			c_polyline.push({
+				"x": a_child_shape_segment_array[i2]["exy"][0]["x"],
+				"y": a_child_shape_segment_array[i2]["exy"][0]["y"],
+				"curve": a_child_shape_segment_array[i2]["exy"][0]["curve"],
+				"original": a_child_shape_segment_array[i2]["em"],
+				"width": a_child_shape_segment_array[i2]["w"],
+				"ids": []
+			});
+			c_polyline.push({
+				"x": a_child_shape_segment_array[i2]["exy"][1]["x"],
+				"y": a_child_shape_segment_array[i2]["exy"][1]["y"],
+				"curve": a_child_shape_segment_array[i2]["exy"][1]["curve"],
+				"original": a_child_shape_segment_array[i2]["em"],
+				"width": a_child_shape_segment_array[i2]["w"],
+				"ids": a_child_shape_segment_array[i2]["eids"]
+			});
+			c_polyline.push({
+				"x": a_child_shape_segment_array[i2]["exy"][2]["x"],
+				"y": a_child_shape_segment_array[i2]["exy"][2]["y"],
+				"curve": a_child_shape_segment_array[i2]["exy"][2]["curve"],
+				"original": a_child_shape_segment_array[i2]["em"],
+				"width": a_child_shape_segment_array[i2 + 1]["w"],
+				"ids": []
+			});
 		} else {
-			c_polyline.push({"x": a_child_shape_segment_array[i2]["exy"][0]["x"], "y": a_child_shape_segment_array[i2]["exy"][0]["y"], "curve": a_child_shape_segment_array[i2]["exy"][0]["curve"], "original": a_child_shape_segment_array[i2]["em"], "width": a_child_shape_segment_array[i2]["w"], "ids": a_child_shape_segment_array[i2]["eids"]});
+			c_polyline.push({
+				"x": a_child_shape_segment_array[i2]["exy"][0]["x"],
+				"y": a_child_shape_segment_array[i2]["exy"][0]["y"],
+				"curve": a_child_shape_segment_array[i2]["exy"][0]["curve"],
+				"original": a_child_shape_segment_array[i2]["em"],
+				"width": a_child_shape_segment_array[i2]["w"],
+				"ids": a_child_shape_segment_array[i2]["eids"]
+			});
 		}
 	}
 	//NaNがないか確認

@@ -1,10 +1,5 @@
 
-
-//     "ur_stops": { //標柱
-//         "ur_stop_id": string; //★標柱ID
-//         "ur_stop_lat": number; //標柱緯度
-//         "ur_stop_lon": number; //標柱経度
-//     }[];
+import { Location, Stop } from "@come25136/gtfs";
 
 /**
  * @typedef UrStop 原子標柱
@@ -12,8 +7,10 @@
  * 整理してbusmapjsで加工しやすくする
  */
 export type UrStop = {
-    ur_stop_id: string,
-    lat: number,
-    lon: number
+    ur_stop_id: Stop["id"],
+    lat: Location["lat"],
+    lon: Location["lon"],
+    name: Stop["name"],
+    parentStation:Stop["parentStation"]
 }
 

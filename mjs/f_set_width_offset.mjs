@@ -27,7 +27,10 @@ export function f_set_width_offset(a_data, a_lonlat_xy, a_settings) {
 		let l_exist = false;
 		//既にそのur_routeがparent_routesにあるか探す。
 		for (let i2 = 0; i2 < c_parent_routes.length; i2++) {
-			if (c_parent_routes[i2]["parent_route_id"] === a_data["ur_routes"][i1][c_parent_route_id_key]) {
+			if (
+				c_parent_routes[i2]["parent_route_id"]
+				=== a_data["ur_routes"][i1][c_parent_route_id_key]
+			) {
 				l_exist = true;
 				continue;
 			}
@@ -45,22 +48,24 @@ export function f_set_width_offset(a_data, a_lonlat_xy, a_settings) {
 		}
 	}
 	//a_data["parent_routes"] = c_parent_routes;
-	
-	
+
+
 	const c_parent_routes_index = {};
 	for (let i1 = 0; i1 < c_parent_routes.length; i1++) {
 		c_parent_routes_index[c_parent_routes[i1]["parent_route_id"]] = c_parent_routes[i1];
 	}
-	
+
 	//(1) parent_routeのchild_shape_segmentでtrip_numberを合計する
 	//(2) direction別に各parent_routeのchild_shape_segmentのwidthを求める。
-	
-	
+
+
 	//(1) parent_routeのchild_shape_segmentでtrip_numberを合計する。
 	for (let i1 = 0; i1 < a_data["ur_routes"].length; i1++) {
 		const c_ur_route = a_data["ur_routes"][i1];
-		const c_child_shape_segments = c_parent_routes_index[c_ur_route[c_parent_route_id_key]]["child_shape_segments"];
-		
+		const c_child_shape_segments = c_parent_routes_index[
+			c_ur_route[c_parent_route_id_key]
+		]["child_shape_segments"];
+
 		for (let i2 = 0; i2 < c_ur_route["child_shape_segment_array"].length; i2++) {
 			const c_id = c_ur_route["child_shape_segment_array"][i2]["id"];
 			if (c_child_shape_segments[c_id] === undefined) {
@@ -81,15 +86,26 @@ export function f_set_width_offset(a_data, a_lonlat_xy, a_settings) {
 	for (let i1 = 0; i1 < c_parent_routes.length; i1++) {
 		for (let i2 in c_parent_routes[i1]["child_shape_segments"]) {
 			const c_child_shape_segment = c_parent_routes[i1]["child_shape_segments"][i2];
-			c_child_shape_segment["width_direction_1"] = f_trip_number_to_width(c_child_shape_segment["trip_number_direction_1"], a_settings);
-			c_child_shape_segment["width_direction_-1"] = f_trip_number_to_width(c_child_shape_segment["trip_number_direction_-1"], a_settings);
-			c_child_shape_segment["width"] = f_trip_number_to_width(c_child_shape_segment["trip_number_direction_1"] + c_child_shape_segment["trip_number_direction_-1"], a_settings);
+			c_child_shape_segment["width_direction_1"] = f_trip_number_to_width(
+				c_child_shape_segment["trip_number_direction_1"],
+				a_settings
+			);
+			c_child_shape_segment["width_direction_-1"] = f_trip_number_to_width(
+				c_child_shape_segment["trip_number_direction_-1"],
+				a_settings);
+			c_child_shape_segment["width"] = f_trip_number_to_width(
+				c_child_shape_segment["trip_number_direction_1"]
+				+ c_child_shape_segment["trip_number_direction_-1"],
+				a_settings
+			);
 		}
 	}
 	//各parent_routeにparent_shape_segmentを作る、最大のwidthをまとめる
 	for (let i1 = 0; i1 < c_parent_routes.length; i1++) {
 		for (let i2 in c_parent_routes[i1]["child_shape_segments"]) {
-			const c_parent_shape_segment_id = a_data["child_shape_segments"][c_parent_routes[i1]["child_shape_segments"][i2]["id"]]["parent_id"];
+			const c_parent_shape_segment_id = a_data["child_shape_segments"][
+				c_parent_routes[i1]["child_shape_segments"][i2]["id"]
+			]["parent_id"];
 			if (c_parent_routes[i1]["shape_segments"][c_parent_shape_segment_id] === undefined) {
 				c_parent_routes[i1]["shape_segments"][c_parent_shape_segment_id] = {
 					"width_direction_1": 0,
@@ -97,14 +113,26 @@ export function f_set_width_offset(a_data, a_lonlat_xy, a_settings) {
 					"width": 0//,
 				}
 			}
-			c_parent_routes[i1]["shape_segments"][c_parent_shape_segment_id]["width_direction_1"] = Math.max(c_parent_routes[i1]["shape_segments"][c_parent_shape_segment_id]["width_direction_1"], c_parent_routes[i1]["child_shape_segments"][i2]["width_direction_1"]);
-			c_parent_routes[i1]["shape_segments"][c_parent_shape_segment_id]["width_direction_-1"] = Math.max(c_parent_routes[i1]["shape_segments"][c_parent_shape_segment_id]["width_direction_-1"], c_parent_routes[i1]["child_shape_segments"][i2]["width_direction_-1"]);
-			c_parent_routes[i1]["shape_segments"][c_parent_shape_segment_id]["width"] = Math.max(c_parent_routes[i1]["shape_segments"][c_parent_shape_segment_id]["width"], c_parent_routes[i1]["child_shape_segments"][i2]["width"]);
+			c_parent_routes[i1]["shape_segments"][c_parent_shape_segment_id]["width_direction_1"]
+				= Math.max(
+					c_parent_routes[i1]["shape_segments"][c_parent_shape_segment_id]["width_direction_1"],
+					c_parent_routes[i1]["child_shape_segments"][i2]["width_direction_1"]
+				);
+			c_parent_routes[i1]["shape_segments"][c_parent_shape_segment_id]["width_direction_-1"]
+				= Math.max(
+					c_parent_routes[i1]["shape_segments"][c_parent_shape_segment_id]["width_direction_-1"],
+					c_parent_routes[i1]["child_shape_segments"][i2]["width_direction_-1"]
+				);
+			c_parent_routes[i1]["shape_segments"][c_parent_shape_segment_id]["width"]
+				= Math.max(
+					c_parent_routes[i1]["shape_segments"][c_parent_shape_segment_id]["width"],
+					c_parent_routes[i1]["child_shape_segments"][i2]["width"]
+				);
 		}
 	}
-	
-	
-	
+
+
+
 	//parent_shape_segmentでoffsetを求める
 	//仮に線の太さの分だけ両側に余白を取るとして計算しておく。
 	for (let i1 in a_data["shape_segments"]) {
@@ -118,9 +146,12 @@ export function f_set_width_offset(a_data, a_lonlat_xy, a_settings) {
 			if (c_parent_routes[i2]["shape_segments"][i1] === undefined) {
 				continue; //通るur_routeがない
 			}
-			l_op = l_op + l_wp * 0.5 + a_settings["min_space_width"] + c_parent_routes[i2]["shape_segments"][i1]["width_direction_1"] * 0.5;
-			l_om = l_om + l_wm * 0.5 + a_settings["min_space_width"] + c_parent_routes[i2]["shape_segments"][i1]["width_direction_-1"] * 0.5;
-			l_o = l_o + l_w * 0.5 + a_settings["min_space_width"] + c_parent_routes[i2]["shape_segments"][i1]["width"] * 0.5;
+			l_op = l_op + l_wp * 0.5 + a_settings["min_space_width"]
+				+ c_parent_routes[i2]["shape_segments"][i1]["width_direction_1"] * 0.5;
+			l_om = l_om + l_wm * 0.5 + a_settings["min_space_width"]
+				+ c_parent_routes[i2]["shape_segments"][i1]["width_direction_-1"] * 0.5;
+			l_o = l_o + l_w * 0.5 + a_settings["min_space_width"]
+				+ c_parent_routes[i2]["shape_segments"][i1]["width"] * 0.5;
 			c_parent_routes[i2]["shape_segments"][i1]["offset_direction_1"] = l_op;
 			c_parent_routes[i2]["shape_segments"][i1]["offset_direction_-1"] = l_om;
 			c_parent_routes[i2]["shape_segments"][i1]["offset"] = l_o;
@@ -129,9 +160,9 @@ export function f_set_width_offset(a_data, a_lonlat_xy, a_settings) {
 			l_w = c_parent_routes[i2]["shape_segments"][i1]["width"];
 		}
 	}
-	
-	
-	
+
+
+
 	//widthとoffsetをur_routeに移す
 	const c_ur_route_child_shape_segment_arrays = [];
 	for (let i1 = 0; i1 < a_data["ur_routes"].length; i1++) {
@@ -140,8 +171,12 @@ export function f_set_width_offset(a_data, a_lonlat_xy, a_settings) {
 			const c_id = a_data["ur_routes"][i1]["child_shape_segment_array"][i2]["id"];
 			const c_parent_id = a_data["child_shape_segments"][c_id]["parent_id"];
 			const c_direction = a_data["ur_routes"][i1]["child_shape_segment_array"][i2]["direction"];
-			const c_child_shape_segment = c_parent_routes_index[a_data["ur_routes"][i1][c_parent_route_id_key]]["child_shape_segments"][c_id];
-			const c_shape_segment = c_parent_routes_index[a_data["ur_routes"][i1][c_parent_route_id_key]]["shape_segments"][c_parent_id];
+			const c_child_shape_segment = c_parent_routes_index[
+				a_data["ur_routes"][i1][c_parent_route_id_key]
+			]["child_shape_segments"][c_id];
+			const c_shape_segment = c_parent_routes_index[
+				a_data["ur_routes"][i1][c_parent_route_id_key]
+			]["shape_segments"][c_parent_id];
 			let l_width;
 			let l_offset;
 			if (a_settings["direction"] === true) {
@@ -169,11 +204,13 @@ export function f_set_width_offset(a_data, a_lonlat_xy, a_settings) {
 			});
 		}
 	}
-	
+
 	//整理
 	for (let i1 = 0; i1 < c_ur_route_child_shape_segment_arrays.length; i1++) {
 		for (let i2 = 0; i2 < c_ur_route_child_shape_segment_arrays[i1].length; i2++) {
-			const c_child_shape_segment = a_data["child_shape_segments"][c_ur_route_child_shape_segment_arrays[i1][i2]["id"]];
+			const c_child_shape_segment = a_data["child_shape_segments"][
+				c_ur_route_child_shape_segment_arrays[i1][i2]["id"]
+			];
 			let l_sid;
 			let l_eid;
 			if (c_ur_route_child_shape_segment_arrays[i1][i2]["direction"] === 1) {
@@ -190,25 +227,40 @@ export function f_set_width_offset(a_data, a_lonlat_xy, a_settings) {
 			c_ur_route_child_shape_segment_arrays[i1][i2]["eid"] = l_eid;
 			c_ur_route_child_shape_segment_arrays[i1][i2]["sids"] = [l_sid];
 			c_ur_route_child_shape_segment_arrays[i1][i2]["eids"] = [l_eid];
-			c_ur_route_child_shape_segment_arrays[i1][i2]["sx"] = a_lonlat_xy(c_s_shape_point["lon"], "lon_to_x", c_zoom_level);
-			c_ur_route_child_shape_segment_arrays[i1][i2]["sy"] = a_lonlat_xy(c_s_shape_point["lat"], "lat_to_y", c_zoom_level);
-			c_ur_route_child_shape_segment_arrays[i1][i2]["ex"] = a_lonlat_xy(c_e_shape_point["lon"], "lon_to_x", c_zoom_level);
-			c_ur_route_child_shape_segment_arrays[i1][i2]["ey"] = a_lonlat_xy(c_e_shape_point["lat"], "lat_to_y", c_zoom_level);
+			c_ur_route_child_shape_segment_arrays[i1][i2]["sx"] = a_lonlat_xy(
+				c_s_shape_point["lon"],
+				"lon_to_x",
+				c_zoom_level
+			);
+			c_ur_route_child_shape_segment_arrays[i1][i2]["sy"] = a_lonlat_xy(
+				c_s_shape_point["lat"],
+				"lat_to_y",
+				c_zoom_level
+			);
+			c_ur_route_child_shape_segment_arrays[i1][i2]["ex"] = a_lonlat_xy(
+				c_e_shape_point["lon"],
+				"lon_to_x",
+				c_zoom_level
+			);
+			c_ur_route_child_shape_segment_arrays[i1][i2]["ey"] = a_lonlat_xy(
+				c_e_shape_point["lat"],
+				"lat_to_y",
+				c_zoom_level);
 			c_ur_route_child_shape_segment_arrays[i1][i2]["s_stop"] = c_s_shape_point["stops_exist"];
 			c_ur_route_child_shape_segment_arrays[i1][i2]["e_stop"] = c_e_shape_point["stops_exist"];
 			c_ur_route_child_shape_segment_arrays[i1][i2]["sm"] = c_s_shape_point["original"];
 			c_ur_route_child_shape_segment_arrays[i1][i2]["em"] = c_e_shape_point["original"];
 		}
 	}
-	
-	
+
+
 	//仮に戻す
 	a_data["ur_route_child_shape_segment_arrays"] = c_ur_route_child_shape_segment_arrays;
 	a_data["parent_routes"] = c_parent_routes;
 
-	
-	
-	
+
+
+
 	//trip_numberをwidthに変換する関数。
 	function f_trip_number_to_width(a_trip_number, a_settings) {
 		const c_min_width = a_settings["min_width"]; //2pxか3pxくらい
@@ -225,7 +277,7 @@ export function f_set_width_offset(a_data, a_lonlat_xy, a_settings) {
 		}
 		return l_width;
 	}
-	
-	
+
+
 }
 

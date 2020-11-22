@@ -12,6 +12,8 @@
 //     }
 // };
 
+import { Trip } from "@come25136/gtfs";
+
 /**
  * @typedef PickUpOrDropOffType 乗降分類数字
  * @description GTFSでいう、stop_timesのpickup_typeとdrop_off_type
@@ -41,9 +43,11 @@ export type LatLon = {
  * @typedef UrRoute 原子系統クラス
  * @description 系統ごとに、停留所配列と描画点配列を持つ。
  * 元データではroutesが細分化されていない為、この型で整理して描画しやすくする
+ * service_arrayはtripIdsから必要に応じて算出する
  */
 export type UrRoute = {
     ur_route_id: string,
     sorted_stops: StopOnRoute[],
-    shape_points:LatLon[]
+    shape_points: LatLon[],
+    tripIds: Set<Trip["id"]>
 }

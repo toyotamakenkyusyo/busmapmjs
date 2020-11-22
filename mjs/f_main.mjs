@@ -65,7 +65,10 @@ export async function f_main(a_settings) {
 		const c_leaflet_map = window.busmapjs[a_settings["busmapjs_id"]].leaflet_map;
 		if (a_settings["background_map"] === true) {
 			for (let i1 = 0; i1 < a_settings["background_layers"].length; i1++) {
-				L.tileLayer(a_settings["background_layers"][i1][0], a_settings["background_layers"][i1][1]).addTo(c_leaflet_map); //背景地図（地理院地図等）を表示する。
+				L.tileLayer(
+					a_settings["background_layers"][i1][0],
+					a_settings["background_layers"][i1][1]
+				).addTo(c_leaflet_map); //背景地図（地理院地図等）を表示する。
 			}
 		}
 		L.svg().addTo(c_leaflet_map); //svg地図を入れる。
@@ -82,7 +85,10 @@ export async function f_main(a_settings) {
 	let l_data = {};
 	if (a_settings["data_type"] === "gtfs") {
 		console.time("t11");
-		const c_csvs = f_zip_to_text(await f_xhr_get(a_settings["data"], "arraybuffer"), Zlib); //Zlibはhttps://cdn.jsdelivr.net/npm/zlibjs@0.3.1/bin/unzip.min.jsにある
+		const c_csvs = f_zip_to_text(
+			await f_xhr_get(a_settings["data"], "arraybuffer"),
+			Zlib
+		); //Zlibはhttps://cdn.jsdelivr.net/npm/zlibjs@0.3.1/bin/unzip.min.jsにある
 		for (let i1 in c_csvs) {
 			l_data[i1.replace(".txt", "")] = f_csv_to_json(c_csvs[i1]);
 		}
@@ -97,7 +103,11 @@ export async function f_main(a_settings) {
 		console.time("t13");
 		f_make_ur_routes(l_data); //ur_routesを作る
 		console.timeEnd("t13");
-	} else if (a_settings["data_type"] === "json" || a_settings["data_type"] === "geojson" || a_settings["data_type"] === "topojson" || a_settings["data_type"] === "api") {
+	} else if (a_settings["data_type"] === "json"
+		|| a_settings["data_type"] === "geojson"
+		|| a_settings["data_type"] === "topojson"
+		|| a_settings["data_type"] === "api"
+	) {
 		l_data = await f_xhr_get(a_settings["data"], "json");
 		if (a_settings["data_type"] === "topojson") {
 			l_data = f_from_topojson(l_data);

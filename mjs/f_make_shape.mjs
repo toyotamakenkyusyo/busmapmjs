@@ -7,8 +7,17 @@ export function f_make_shape(a_data) {
 		//整列されている場合に限り、連続する点が同じなら消去する
 		const c_temp_shapes = [];
 		for (let i1 = 1; i1 < a_data["shapes"].length; i1++) {
-			if (!(a_data["shapes"][i1 - 1]["shape_pt_lat"] === a_data["shapes"][i1]["shape_pt_lat"] && a_data["shapes"][i1 - 1]["shape_pt_lon"] === a_data["shapes"][i1]["shape_pt_lon"] && a_data["shapes"][i1 - 1]["shape_id"] === a_data["shapes"][i1]["shape_id"] && a_data["shapes"][i1 - 1]["shape_pt_sequence"] < a_data["shapes"][i1]["shape_pt_sequence"])) {
-				c_temp_shapes.push({"shape_id": a_data["shapes"][i1]["shape_id"], "shape_pt_lat": a_data["shapes"][i1]["shape_pt_lat"], "shape_pt_lon": a_data["shapes"][i1]["shape_pt_lon"], "shape_pt_sequence": a_data["shapes"][i1]["shape_pt_sequence"]});
+			if (!(a_data["shapes"][i1 - 1]["shape_pt_lat"] === a_data["shapes"][i1]["shape_pt_lat"]
+				&& a_data["shapes"][i1 - 1]["shape_pt_lon"] === a_data["shapes"][i1]["shape_pt_lon"]
+				&& a_data["shapes"][i1 - 1]["shape_id"] === a_data["shapes"][i1]["shape_id"]
+				&& a_data["shapes"][i1 - 1]["shape_pt_sequence"] < a_data["shapes"][i1]["shape_pt_sequence"]
+			)) {
+				c_temp_shapes.push({
+					"shape_id": a_data["shapes"][i1]["shape_id"],
+					"shape_pt_lat": a_data["shapes"][i1]["shape_pt_lat"],
+					"shape_pt_lon": a_data["shapes"][i1]["shape_pt_lon"],
+					"shape_pt_sequence": a_data["shapes"][i1]["shape_pt_sequence"]
+				});
 			}
 		}
 		a_data["shapes"] = c_temp_shapes;
@@ -22,10 +31,17 @@ export function f_make_shape(a_data) {
 		//console.log(a_data["routes"]);
 		
 		for (let i2 = 0; i2 < a_data["trips"].length; i2++) {
-			if (a_data["routes"][i1]["route_id"] === a_data["trips"][i2]["route_id"]) {
+			if (
+				a_data["routes"][i1]["route_id"]
+				=== a_data["trips"][i2]["route_id"]
+			) {
 				l_trip_id = a_data["trips"][i2]["trip_id"];
-				if (a_data["trips"][i2]["shape_id"] === undefined || a_data["trips"][i2]["shape_id"] === "") { //shape_idがない場合、補完する
-					a_data["trips"][i2]["shape_id"] = "shape_id_" + a_data["routes"][i1]["route_id"];
+				if (
+					a_data["trips"][i2]["shape_id"] === undefined
+					|| a_data["trips"][i2]["shape_id"] === ""
+				) { //shape_idがない場合、補完する
+					a_data["trips"][i2]["shape_id"] = "shape_id_"
+						+ a_data["routes"][i1]["route_id"];
 				}
 				if (l_shape_id === null) {
 					l_shape_id = a_data["trips"][i2]["shape_id"];
@@ -33,7 +49,10 @@ export function f_make_shape(a_data) {
 					document.getElementById("div_status").innerHTML +="このGTFSは非対応";
 				}
 				for (let i3 = 0; i3 < a_data["shapes"].length; i3++) {
-					if (a_data["shapes"][i3]["shape_id"] === l_shape_id && l_first === true) { //shapesがすでにある
+					if (
+						a_data["shapes"][i3]["shape_id"] === l_shape_id
+						&& l_first === true
+					) { //shapesがすでにある
 						l_exist += 1;
 						if (l_exist >= 2) {
 							break;
@@ -58,7 +77,10 @@ export function f_make_shape(a_data) {
 		for (let i2 = 0; i2 < a_data["stop_times"].length; i2++) {
 			if (a_data["stop_times"][i2]["trip_id"] === l_trip_id) {
 				for (let i3 = 0; i3 < a_data["stops"].length; i3++) {
-					if (a_data["stop_times"][i2]["stop_id"] === a_data["stops"][i3]["stop_id"]) {
+					if (
+						a_data["stop_times"][i2]["stop_id"]
+						=== a_data["stops"][i3]["stop_id"]
+					) {
 						c_shape_temp.push({
 							"shape_id": l_shape_id,
 							"shape_pt_lat": a_data["stops"][i3]["stop_lat"],
