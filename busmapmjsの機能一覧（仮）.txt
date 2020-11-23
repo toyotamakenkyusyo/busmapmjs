@@ -1,0 +1,54 @@
+●前処理
+・設定 f_input_settings
+・HTMLへ設定formやLeafletを入れるdivを書き出し f_html
+・複数の設定を共存するため、busmapjs_idで区別してwindow.busmapjs以下でグローバルに保持
+・Leafletに背景地図とバスマップ用SVGを入れる
+・読み込み機能（GTFS）
+　zip解凍
+　CSVをObject化
+　空欄shape_idを仮決め（GTFS-JP初版のroute_id専用のはず）f_set_temp_shape_id
+　shapeがないとき、stop_timesから停留所のみのshapesを補完 f_make_shape
+　GTFSで空欄のpickup_typeとdrop_off_typeを補完 f_set_stop_type
+　route_sort_orderを補う（ur_route作成時にrouteの順番を継承するため）f_set_route_sort_order
+　緯度、経度、順番の型を数に変換 f_number_gtfs
+　ur_routeを作成 f_make_ur_routes
+・読み込み機能（独自形式JSON）
+・読み込み機能（独自形式TopoJSON）f_from_topojson
+・読み込み機能（LineStringのGeoJSONならなんでもと、独自形式）f_from_geojson
+・読み込み機能（TraRepoの路線図api）f_from_api
+・GTFS以外で読み込んだ場合の不足を補う f_prepare_json
+・route_color、route_text_colorがない場合に補完f_set_color
+・shape_pt_arrayがない場合にstopから補完 f_make_shape_pt_array
+・stopをur_stopとparent_stationに分離 f_make_parent_stations
+・ur_routeごと、service_idごとの本数を数えるf_count_trip_number
+・GTFS-RTをObjectへ読み込み f_binary_to_json
+・ur_route一覧表をHTMLへ書き出し f_ur_route_list
+・shape_segmentsを作成 f_make_shape_segments
+・バスマップ作製 f_draw
+●バスマップ描画 f_draw
+・表示するur_routeを設定
+・地図の端の位置を調べ、SVGを準備
+・parent_routeをつくり、線幅とオフセット幅を決める f_set_width_offset
+・ズームレベルごと、内容ごとにSVGのレイヤーを分ける
+・オフセット f_offset_segment_array
+・オフセットしたものを表示用の折れ線に変換 f_make_polyline
+・緯度経度とxyを変換
+・折れ線に標柱の位置を追加
+・停留所間ごとに折れ線を分割 f_cut_polyline
+・parent_routeのroute_colorを設定
+・Leafletに系統線を書き出す
+・SVGに系統線を書き出す
+・Leafletに停留所記号を書き出す
+・SVGに停留所記号を書き出す
+・同名停留所を簡易チェックし、停留所名をSVGに書き出す
+・Leafletに停留所名を書き出す
+●バスマップ表示
+・ズームレベルに応じて拡大縮小、レイヤー切り替えする f_zoom
+・クリックした系統線の色を変える f_change_parent_route_color
+・2停留所をクリックして、間を経路検索して表示する
+
+
+
+
+
+
