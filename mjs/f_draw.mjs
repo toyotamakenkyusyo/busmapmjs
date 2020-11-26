@@ -153,13 +153,10 @@ export function f_draw(a_bmd, a_settings) {
 			for (let i3 = 0; i3 < c_polyline.length; i3++) {
 				c_polyline[i3]["near_stops"] = [];
 				if (c_polyline[i3]["ids"] === undefined) {
-					c_polyline[i3]["ids"] = [];
+					//c_polyline[i3]["ids"] = []; //使われていなさそう
 				}
-				for (let i4 = 0; i4 < c_polyline[i3]["ids"].length; i4++) {
-					const c_near_stops = a_bmd["shape_points"][c_polyline[i3]["ids"][i4]]["near_stops"];
-					for (let i5 = 0; i5 < c_near_stops.length; i5++) {
-						c_polyline[i3]["near_stops"].push(c_near_stops[i5]);
-					}
+				for (const i4 of c_polyline[i3]["ids"]) {
+					c_polyline[i3]["near_stops"] = c_polyline[i3]["near_stops"].concat(a_bmd["shape_points"][i4]["near_stops"]);
 				}
 			}
 			
@@ -171,13 +168,13 @@ export function f_draw(a_bmd, a_settings) {
 			const c_parent_route_id = a_bmd["ur_routes"][i2][a_settings["parent_route_id"]];
 			//親のroutecolor
 			let l_route_color;
-			for (let i5 = 0; i5 < a_bmd["parent_routes"].length; i5++) {
-				if (c_parent_route_id === a_bmd["parent_routes"][i5]["parent_route_id"]) {
-					if (a_bmd["parent_routes"][i5]["route_color"] === undefined || a_bmd["parent_routes"][i5]["route_color"] === "") {
+			for (let i3 = 0; i3 < a_bmd["parent_routes"].length; i3++) {
+				if (c_parent_route_id === a_bmd["parent_routes"][i3]["parent_route_id"]) {
+					if (a_bmd["parent_routes"][i3]["route_color"] === undefined || a_bmd["parent_routes"][i3]["route_color"] === "") {
 						//l_route_color = "808080"
-						a_bmd["parent_routes"][i5]["route_color"] = Math.round((Math.random() * 15)).toString(16) + "F" + Math.round((Math.random() * 15)).toString(16) + "F" + Math.round((Math.random() * 15)).toString(16) + "F"; //本来はFFFFFF
+						a_bmd["parent_routes"][i3]["route_color"] = Math.round((Math.random() * 15)).toString(16) + "F" + Math.round((Math.random() * 15)).toString(16) + "F" + Math.round((Math.random() * 15)).toString(16) + "F"; //本来はFFFFFF
 					}
-					l_route_color = a_bmd["parent_routes"][i5]["route_color"];
+					l_route_color = a_bmd["parent_routes"][i3]["route_color"];
 					break;
 				}
 			}
