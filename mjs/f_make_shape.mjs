@@ -30,7 +30,8 @@ export function f_make_shape(a_data) {
 				if (l_shape_id === null) {
 					l_shape_id = a_data["trips"][i2]["shape_id"];
 				} else if (l_shape_id !== a_data["trips"][i2]["shape_id"]) {
-					document.getElementById("div_status").innerHTML +="このGTFSは非対応";
+					//document.getElementById("div_status").innerHTML +="このGTFSは非対応";
+					console.log("このGTFSは非対応");
 				}
 				for (let i3 = 0; i3 < a_data["shapes"].length; i3++) {
 					if (a_data["shapes"][i3]["shape_id"] === l_shape_id && l_first === true) { //shapesがすでにある
