@@ -52,6 +52,11 @@ export function f_make_ur_routes(a_data) {
 			}
 			const c_shapes = c_shape_index["shape_id_" + a_data["trips"][i1]["shape_id"]];
 			for (let i2 = 0; i2 < c_shapes.length; i2++) {
+				if (i2 !== 0) {
+					if (a_data["trips"][i1]["shapes"][a_data["trips"][i1]["shapes"].length - 1]["shape_pt_lon"] === c_shapes[i2]["shape_pt_lon"] && a_data["trips"][i1]["shapes"][a_data["trips"][i1]["shapes"].length - 1]["shape_pt_lat"] === c_shapes[i2]["shape_pt_lat"]) {
+						continue;
+					}
+				}
 				const c_shape = {};
 				for (let i3 in c_shapes[i2]) {
 					c_shape[i3] = c_shapes[i2][i3];
