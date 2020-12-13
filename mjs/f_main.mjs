@@ -23,6 +23,7 @@ import {f_set_route_sort_order} from "./f_set_route_sort_order.mjs";
 import {f_number_gtfs} from "./f_number_gtfs.mjs";
 import {f_make_ur_routes} from "./f_make_ur_routes.mjs";
 
+import {f_simplify_shapes} from "./f_simplify_shapes.mjs";
 import {f_set_color} from "./f_set_color.mjs";
 import {f_make_shape_pt_array} from "./f_make_shape_pt_array.mjs";
 import {f_make_parent_stations} from "./f_make_parent_stations.mjs";
@@ -90,6 +91,7 @@ export async function f_main(a_settings) {
 		console.time("t12");
 		f_set_temp_shape_id(l_data);
 		f_make_shape(l_data);
+		l_data["shapes"] = f_simplify_shapes(l_data["shapes"]); //shapesを簡素化
 		f_set_stop_type(l_data); //pickup_typeとdrop_off_typeを補う（ur_routesを作るため）
 		f_set_route_sort_order(l_data); //route_sort_orderを補う（ur_routesを作るため）
 		f_number_gtfs(l_data); //緯度、経度、順番の型を数に変換
