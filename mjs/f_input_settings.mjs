@@ -17,6 +17,7 @@ export function f_input_settings(a_settings) {
 		"timetable": true,//時刻表を表示する
 		"direction": true,
 		"parent_route_id": "route_id",
+		"simplify_shapes": true, //shapesを簡素化する
 		"stop_name": true,
 		"stop_name_overlap":true,
 		"zoom_level": 16,
